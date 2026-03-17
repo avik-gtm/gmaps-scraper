@@ -8,6 +8,7 @@ from datetime import datetime
 
 from scraper_tech import search_maps, flatten_result
 from clay_webhook import send_to_clay
+from apify_actor import run_actor_with_csv
 
 # --- Config ---
 ZIP_CSV = Path(__file__).parent / "us_zip_codes.csv"
@@ -408,6 +409,49 @@ if submitted and keyword:
             else:
                 st.warning("Enter a Clay webhook URL first")
 
+        # Apify actor integration
+        st.divider()
+        st.subheader("Process with Apify Actor")
+        apify_actor = st.text_input(
+            "Apify Actor Name",
+            value=os.getenv("APIFY_ACTOR_NAME", ""),
+            placeholder="e.g., creator-account/csv---webhook",
+            help="Full actor identifier to process the CSV data",
+        )
+        apify_wait = st.checkbox("Wait for actor to complete", value=False, help="Poll for run completion")
+        if st.button("Send to Apify Actor", use_container_width=True):
+            if apify_actor:
+                apify_progress = st.progress(0)
+                apify_status = st.empty()
+
+                try:
+                    csv_content = df_results.to_csv(index=False)
+                    apify_status.text("Uploading CSV to Apify key-value store and starting actor...")
+
+                    def on_apify_progress(msg):
+                        apify_status.text(f"Status: {msg}")
+
+                    max_wait = 300 if apify_wait else 0
+                    result = run_actor_with_csv(
+                        apify_actor,
+                        csv_content,
+                        poll_interval=5,
+                        max_wait=max_wait,
+                        on_progress=on_apify_progress,
+                    )
+
+                    if "error" in result:
+                        apify_status.error(f"Error: {result['error']}")
+                    else:
+                        apify_progress.progress(1.0)
+                        run_id = result.get("run_id", "unknown")
+                        run_status = result.get("run_status", result.get("status", ""))
+                        apify_status.success(f"Actor run: {run_id} ({run_status})")
+                except Exception as e:
+                    apify_status.error(f"Failed to run actor: {e}")
+            else:
+                st.warning("Enter an Apify actor name first")
+
         st.caption(f"Results saved to `{filepath}`")
 
 elif submitted and not keyword:
@@ -467,5 +511,52 @@ with st.sidebar:
                         st.error(f"Failed: {e}")
                 else:
                     st.warning("Enter a Clay webhook URL")
+
+            # Apify actor for past scrapes
+            st.divider()
+            st.markdown("**Apify Actor**")
+            past_apify_actor = st.text_input(
+                "Actor Name",
+                value=os.getenv("APIFY_ACTOR_NAME", ""),
+                placeholder="e.g., creator-account/csv---webhook",
+                key="sidebar_apify_actor",
+            )
+            past_apify_wait = st.checkbox(
+                "Wait for completion",
+                value=False,
+                key="sidebar_apify_wait",
+            )
+            if st.button("Send to Apify", use_container_width=True, key="sidebar_apify_btn"):
+                if past_apify_actor:
+                    past_apify_progress = st.progress(0)
+                    past_apify_status = st.empty()
+
+                    try:
+                        csv_content = past_df.to_csv(index=False)
+                        past_apify_status.text("Starting Apify actor run...")
+
+                        def on_past_apify_progress(msg):
+                            past_apify_status.text(f"Status: {msg}")
+
+                        max_wait = 300 if past_apify_wait else 0
+                        result = run_actor_with_csv(
+                            past_apify_actor,
+                            csv_content,
+                            poll_interval=5,
+                            max_wait=max_wait,
+                            on_progress=on_past_apify_progress,
+                        )
+
+                        if "error" in result:
+                            past_apify_status.error(f"Error: {result['error']}")
+                        else:
+                            past_apify_progress.progress(1.0)
+                            run_id = result.get("run_id", "unknown")
+                            run_status = result.get("run_status", result.get("status", ""))
+                            past_apify_status.success(f"Run: {run_id} ({run_status})")
+                    except Exception as e:
+                        past_apify_status.error(f"Failed: {e}")
+                else:
+                    st.warning("Enter an Apify actor name")
     else:
         st.caption("No scrapes yet. Run a search to get started.")
