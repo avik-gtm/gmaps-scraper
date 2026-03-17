@@ -6,41 +6,27 @@ import httpx
 try:
     import streamlit as st
     APIFY_API_KEY = st.secrets.get("APIFY_API_KEY", os.getenv("APIFY_API_KEY", ""))
+    APIFY_KV_STORE_ID = st.secrets.get("APIFY_KV_STORE_ID", os.getenv("APIFY_KV_STORE_ID", ""))
 except Exception:
     from dotenv import load_dotenv
     load_dotenv()
     APIFY_API_KEY = os.getenv("APIFY_API_KEY", "")
+    APIFY_KV_STORE_ID = os.getenv("APIFY_KV_STORE_ID", "")
 
 
 def upload_csv_to_keyvalue_store(csv_data: str, actor_name: str, api_key: str = None,
-                                  store_name: str = "input", on_progress=None) -> dict:
-    """
-    Upload CSV data to Apify key-value store.
-
-    Args:
-        csv_data: CSV content as string
-        actor_name: Actor identifier (e.g., "creator-account/csv---webhook")
-        api_key: Apify API key (defaults to env var)
-        store_name: Name of the key-value store (default "input")
-        on_progress: Callback function for progress updates
-
-    Returns:
-        dict with status, store_id, and any error info
-    """
+                                  store_id: str = None, record_key: str = "input.csv",
+                                  on_progress=None) -> dict:
+    """Upload CSV data to a named Apify key-value store."""
     key = api_key or APIFY_API_KEY
+    sid = store_id or APIFY_KV_STORE_ID
     if not key:
         return {"error": "No Apify API key configured."}
-
-    # Endpoint: PUT /v2/key-value-stores/{storeId}/records/{recordKey}
-    # For actor input, we typically use the default store
-    # First, we need to get or create the store for this actor run
+    if not sid:
+        return {"error": "No Apify key-value store ID configured. Set APIFY_KV_STORE_ID."}
 
     try:
-        # Step 1: Get the default key-value store for the actor
-        # We'll use a generic store ID or create one via run
-        # For simplicity, we'll use the actor's default input store
-
-        store_url = f"https://api.apify.com/v2/key-value-stores/default/records/input.csv"
+        store_url = f"https://api.apify.com/v2/key-value-stores/{sid}/records/{record_key}"
 
         headers = {
             "Authorization": f"Bearer {key}",
@@ -48,17 +34,13 @@ def upload_csv_to_keyvalue_store(csv_data: str, actor_name: str, api_key: str = 
         }
 
         with httpx.Client(timeout=60) as client:
-            resp = client.put(
-                store_url,
-                content=csv_data,
-                headers=headers,
-            )
+            resp = client.put(store_url, content=csv_data, headers=headers)
             resp.raise_for_status()
 
         if on_progress:
             on_progress("Uploaded CSV to key-value store")
 
-        return {"status": "uploaded", "store": store_name, "records": len(csv_data.split('\n'))}
+        return {"status": "uploaded", "store_id": sid, "records": len(csv_data.split('\n'))}
 
     except Exception as e:
         return {"error": f"Failed to upload to key-value store: {str(e)}"}
