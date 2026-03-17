@@ -67,7 +67,9 @@ def run_actor(actor_name: str, input_data: dict = None, api_key: str = None,
     # Endpoint: POST /v2/acts/{actorId}/runs
     # Or for named actors: POST /v2/acts/{username}/{actorName}/runs
 
-    url = f"https://api.apify.com/v2/acts/{actor_name}/runs"
+    # Apify uses ~ instead of / in actor names for URLs
+    safe_name = actor_name.replace("/", "~")
+    url = f"https://api.apify.com/v2/acts/{safe_name}/runs"
 
     headers = {
         "Authorization": f"Bearer {key}",
