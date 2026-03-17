@@ -15,9 +15,10 @@ except Exception:
 
 
 def run_actor_with_csv(actor_name: str, csv_data: str, api_key: str = None,
-                       store_id: str = None, batch_size: int = 500,
-                       max_concurrency: int = 3, poll_interval: int = 5,
-                       max_wait: int = 300, on_progress=None) -> dict:
+                       store_id: str = None, file_key_name: str = None,
+                       batch_size: int = 500, max_concurrency: int = 3,
+                       poll_interval: int = 5, max_wait: int = 300,
+                       on_progress=None) -> dict:
     """Upload CSV to key-value store, then run actor pointing to it."""
     key = api_key or APIFY_API_KEY
     sid = store_id or APIFY_KV_STORE_ID
@@ -27,7 +28,7 @@ def run_actor_with_csv(actor_name: str, csv_data: str, api_key: str = None,
         return {"error": "No Apify key-value store ID configured."}
 
     # Step 1: Upload CSV to the named store
-    file_key = f"gmaps-{datetime.now().strftime('%Y%m%d-%H%M%S')}.csv"
+    file_key = file_key_name or f"gmaps-{datetime.now().strftime('%Y%m%d-%H%M%S')}.csv"
     if on_progress:
         on_progress(f"Uploading CSV as '{file_key}'...")
 

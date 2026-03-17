@@ -14,6 +14,44 @@ from apify_actor import run_actor_with_csv
 ZIP_CSV = Path(__file__).parent / "us_zip_codes.csv"
 RESULTS_DIR = Path(__file__).parent / "results"
 RESULTS_DIR.mkdir(exist_ok=True)
+APIFY_LOG_FILE = RESULTS_DIR / "apify_log.json"
+
+
+def load_apify_log():
+    """Load log of CSVs that have been sent to Apify."""
+    if APIFY_LOG_FILE.exists():
+        return json.loads(APIFY_LOG_FILE.read_text())
+    return {}
+
+
+def save_apify_log(log: dict):
+    APIFY_LOG_FILE.write_text(json.dumps(log, indent=2))
+
+
+def build_csv_filename(keyword, market, scope, states=None, cities=None, count=0):
+    """Build a descriptive CSV filename."""
+    parts = ["gmaps", keyword.replace(" ", "-")]
+
+    if market == "Europe":
+        parts.append("EU")
+    else:
+        if scope == "Entire US":
+            parts.append("US-all")
+        elif scope == "Specific States" and states:
+            state_str = "-".join(s.replace(" ", "") for s in states[:5])
+            parts.append(state_str)
+            if len(states) > 5:
+                parts.append(f"+{len(states)-5}more")
+        elif scope == "Specific Cities" and cities:
+            city_str = "-".join(c.replace(" ", "") for c in cities[:3])
+            parts.append(city_str)
+            if len(cities) > 3:
+                parts.append(f"+{len(cities)-3}more")
+
+    parts.append(f"{count}results")
+    parts.append(datetime.now().strftime("%Y%m%d_%H%M%S"))
+
+    return "_".join(parts) + ".csv"
 
 
 # --- Password Protection ---
@@ -365,9 +403,13 @@ if submitted and keyword:
 
         st.dataframe(df_results, use_container_width=True, height=400)
 
-        # Save to CSV
-        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"gmaps_{keyword.replace(' ', '_')}_{ts}.csv"
+        # Save to CSV with descriptive name
+        filename = build_csv_filename(
+            keyword, market, scope,
+            states=selected_states or None,
+            cities=selected_cities or (eu_city_input.split(",") if eu_city_input else None),
+            count=len(df_results),
+        )
         filepath = RESULTS_DIR / filename
         df_results.to_csv(filepath, index=False)
 
@@ -419,6 +461,13 @@ if submitted and keyword:
             help="Full actor identifier to process the CSV data",
         )
         apify_wait = st.checkbox("Wait for actor to complete", value=False, help="Poll for run completion")
+
+        # Check if this file was already sent
+        apify_log = load_apify_log()
+        if filename in apify_log:
+            prev = apify_log[filename]
+            st.warning(f"Already sent to Apify on {prev.get('sent_at', '?')} — Run ID: `{prev.get('run_id', '?')}`")
+
         if st.button("Send to Apify Actor", use_container_width=True):
             if apify_actor:
                 apify_progress = st.progress(0)
@@ -435,6 +484,7 @@ if submitted and keyword:
                     result = run_actor_with_csv(
                         apify_actor,
                         csv_content,
+                        file_key_name=filename,
                         poll_interval=5,
                         max_wait=max_wait,
                         on_progress=on_apify_progress,
@@ -448,10 +498,19 @@ if submitted and keyword:
                         run_status = result.get("run_status", "")
                         file_key = result.get("file_key", "")
 
+                        # Log this send
+                        apify_log[filename] = {
+                            "run_id": run_id,
+                            "file_key": file_key,
+                            "run_status": run_status,
+                            "sent_at": datetime.now().isoformat(),
+                        }
+                        save_apify_log(apify_log)
+
                         if run_status == "SUCCEEDED":
-                            st.success(f"Actor completed successfully!")
+                            st.success("Actor completed successfully!")
                         elif run_status == "FAILED":
-                            st.error(f"Actor run failed.")
+                            st.error("Actor run failed.")
                         elif run_status == "STARTED":
                             st.info("Actor started — running in background.")
                         else:
@@ -532,6 +591,16 @@ with st.sidebar:
             # Apify actor for past scrapes
             st.divider()
             st.markdown("**Apify Actor**")
+
+            # Show if already sent
+            sidebar_apify_log = load_apify_log()
+            past_fname = selected_file.name
+            if past_fname in sidebar_apify_log:
+                prev = sidebar_apify_log[past_fname]
+                st.success(f"Already sent to Apify")
+                st.code(f"Run ID: {prev.get('run_id', '?')}\nSent: {prev.get('sent_at', '?')}")
+                st.markdown(f"[View on Apify](https://console.apify.com/actors/runs/{prev.get('run_id', '')})")
+
             past_apify_actor = st.text_input(
                 "Actor Name",
                 value=os.getenv("APIFY_ACTOR_NAME", ""),
@@ -543,7 +612,9 @@ with st.sidebar:
                 value=False,
                 key="sidebar_apify_wait",
             )
-            if st.button("Send to Apify", use_container_width=True, key="sidebar_apify_btn"):
+
+            btn_label = "Re-send to Apify" if past_fname in sidebar_apify_log else "Send to Apify"
+            if st.button(btn_label, use_container_width=True, key="sidebar_apify_btn"):
                 if past_apify_actor:
                     past_apify_progress = st.progress(0)
                     past_apify_status = st.empty()
@@ -559,6 +630,7 @@ with st.sidebar:
                         result = run_actor_with_csv(
                             past_apify_actor,
                             csv_content,
+                            file_key_name=past_fname,
                             poll_interval=5,
                             max_wait=max_wait,
                             on_progress=on_past_apify_progress,
@@ -571,6 +643,15 @@ with st.sidebar:
                             run_id = result.get("run_id", "unknown")
                             run_status = result.get("run_status", "")
                             file_key = result.get("file_key", "")
+
+                            # Log it
+                            sidebar_apify_log[past_fname] = {
+                                "run_id": run_id,
+                                "file_key": file_key,
+                                "run_status": run_status,
+                                "sent_at": datetime.now().isoformat(),
+                            }
+                            save_apify_log(sidebar_apify_log)
 
                             if run_status == "SUCCEEDED":
                                 st.success("Actor completed!")
