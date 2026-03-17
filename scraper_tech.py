@@ -43,6 +43,26 @@ def search_maps(query: str, country: str = "us", lang: str = "en",
     return data if isinstance(data, list) else []
 
 
+def search_maps_all_pages(query: str, country: str = "us", lang: str = "en",
+                          lat: float = None, lng: float = None,
+                          page_size: int = 20, zoom: int = 13,
+                          max_pages: int = 50) -> list[dict]:
+    """Fetch all pages of results for a query."""
+    all_results = []
+    offset = 0
+    for _ in range(max_pages):
+        results = search_maps(query=query, country=country, lang=lang,
+                              lat=lat, lng=lng, limit=page_size,
+                              offset=offset, zoom=zoom)
+        if not results:
+            break
+        all_results.extend(results)
+        if len(results) < page_size:
+            break
+        offset += page_size
+    return all_results
+
+
 def search_by_zip(keyword: str, zip_code: str, country: str = "us",
                   limit: int = 20) -> list[dict]:
     """Search Google Maps for a keyword in a specific zip code."""

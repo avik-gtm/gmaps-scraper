@@ -1,0 +1,6 @@
+[server]
+enableWebsocketCompression = false
+maxMessageSize = 500
+
+[browser]
+gatherUsageStats = false

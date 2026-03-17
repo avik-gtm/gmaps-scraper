@@ -1,12 +1,14 @@
 import os
 import time
 import json
+import threading
 import pandas as pd
 import streamlit as st
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from datetime import datetime
 
-from scraper_tech import search_maps, flatten_result
+from scraper_tech import search_maps_all_pages, flatten_result
 from clay_webhook import send_to_clay
 from apify_actor import run_actor_with_csv
 
@@ -15,6 +17,7 @@ ZIP_CSV = Path(__file__).parent / "us_zip_codes.csv"
 RESULTS_DIR = Path(__file__).parent / "results"
 RESULTS_DIR.mkdir(exist_ok=True)
 APIFY_LOG_FILE = RESULTS_DIR / "apify_log.json"
+JOB_STATUS_FILE = RESULTS_DIR / "scrape_job.json"
 
 
 def load_apify_log():
@@ -52,6 +55,25 @@ def build_csv_filename(keyword, market, scope, states=None, cities=None, count=0
     parts.append(datetime.now().strftime("%Y%m%d_%H%M%S"))
 
     return "_".join(parts) + ".csv"
+
+
+# --- Job status (written to disk so it survives reruns/tab closes) ---
+def save_job_status(status: dict):
+    JOB_STATUS_FILE.write_text(json.dumps(status, indent=2))
+
+
+def load_job_status() -> dict | None:
+    if JOB_STATUS_FILE.exists():
+        try:
+            return json.loads(JOB_STATUS_FILE.read_text())
+        except (json.JSONDecodeError, IOError):
+            return None
+    return None
+
+
+def clear_job_status():
+    if JOB_STATUS_FILE.exists():
+        JOB_STATUS_FILE.unlink()
 
 
 # --- Password Protection ---
@@ -113,78 +135,212 @@ def filter_zip_codes(df, scope, selected_states=None, selected_cities=None,
     return filtered
 
 
-def run_scrape(keyword, zip_codes_df, country, excluded_categories,
-               progress_bar, status_text, results_container, delay=0.5,
-               max_results=0):
-    """Run the scrape across all zip codes."""
-    all_results = []
-    seen_place_ids = set()
-    total = len(zip_codes_df)
-    errors = 0
+def load_past_scraped_data(keyword: str = None) -> tuple[set, set]:
+    """Load place_ids and scraped zip codes from past CSVs.
 
-    for i, (_, row) in enumerate(zip_codes_df.iterrows()):
-        # Check max results limit before making another API call
-        if max_results > 0 and len(all_results) >= max_results:
-            progress_bar.progress(1.0)
-            status_text.text(f"Reached max results limit ({max_results}). Stopping. Found {len(all_results)} businesses.")
-            break
+    If keyword is provided, only considers CSVs where search_keyword matches
+    for zip-level skipping. Place_id exclusion is always global.
 
-        zip_code = row["zipcode"]
-        city = row["city"]
-        state = row["state_abbr"] if "state_abbr" in row else row.get("state", "")
-
-        progress = (i + 1) / total
-        progress_bar.progress(progress)
-        status_text.text(
-            f"Searching zip {zip_code} ({city}, {state}) — "
-            f"{i+1}/{total} | Found: {len(all_results)} businesses | Errors: {errors}"
-        )
-
+    Returns (place_ids, scraped_zips).
+    """
+    place_ids = set()
+    scraped_zips = set()
+    for csv_file in RESULTS_DIR.glob("*.csv"):
         try:
-            query = f"{keyword} in {zip_code}"
-            results = search_maps(query=query, country=country, limit=20)
+            cols_to_load = ["place_id"]
+            header = pd.read_csv(csv_file, nrows=0).columns.tolist()
+            has_keyword = "search_keyword" in header
+            has_zip = "source_zip" in header
 
-            for r in results:
-                place_id = r.get("place_id", r.get("business_id", ""))
+            if has_zip:
+                cols_to_load.append("source_zip")
+            if has_keyword:
+                cols_to_load.append("search_keyword")
+
+            df = pd.read_csv(csv_file, usecols=cols_to_load, dtype=str)
+            place_ids.update(df["place_id"].dropna().tolist())
+
+            if has_zip and keyword:
+                if has_keyword:
+                    matched = df[df["search_keyword"].str.lower() == keyword.lower()]
+                    scraped_zips.update(matched["source_zip"].dropna().tolist())
+        except (ValueError, KeyError):
+            pass
+    return place_ids, scraped_zips
+
+
+# --- Background scraper ---
+# Use a module-level lock so only one scrape runs at a time
+_scrape_lock = threading.Lock()
+_stop_event = threading.Event()
+
+
+def _fetch_zip(keyword, zip_code, country):
+    """Fetch all results for a single zip code. Runs in a thread."""
+    query = f"{keyword} in {zip_code}"
+    return search_maps_all_pages(query=query, country=country)
+
+
+def _run_scrape_background(keyword, zip_rows, country, excluded_categories,
+                           initial_seen_ids, output_filepath, delay, max_results,
+                           max_workers):
+    """Background scrape function — writes results to disk and updates status file."""
+    if not _scrape_lock.acquire(blocking=False):
+        save_job_status({"status": "error", "message": "Another scrape is already running."})
+        return
+
+    _stop_event.clear()
+
+    try:
+        seen_place_ids = set(initial_seen_ids) if initial_seen_ids else set()
+        lock = threading.Lock()
+        total = len(zip_rows)
+        completed = 0
+        errors = 0
+        found = 0
+        header_written = False
+
+        save_job_status({
+            "status": "running",
+            "completed": 0,
+            "total": total,
+            "found": 0,
+            "errors": 0,
+            "output_file": str(output_filepath),
+            "started_at": datetime.now().isoformat(),
+        })
+
+        def save_batch_to_disk(batch_results):
+            nonlocal header_written
+            if not batch_results:
+                return
+            df_batch = pd.DataFrame(batch_results)
+            if not header_written:
+                df_batch.to_csv(output_filepath, index=False, mode="w")
+                header_written = True
+            else:
+                df_batch.to_csv(output_filepath, index=False, mode="a", header=False)
+
+        def process_result(r, zip_code, city, state):
+            place_id = r.get("place_id", r.get("business_id", ""))
+            with lock:
                 if place_id and place_id in seen_place_ids:
-                    continue
+                    return None
                 if place_id:
                     seen_place_ids.add(place_id)
 
-                # Filter out excluded categories
-                types = r.get("types", [])
-                if isinstance(types, str):
-                    types = [t.strip() for t in types.split(",")]
-                if excluded_categories:
-                    excluded_lower = [c.lower().strip() for c in excluded_categories]
-                    if any(t.lower() in excluded_lower for t in types):
-                        continue
+            types = r.get("types", [])
+            if isinstance(types, str):
+                types = [t.strip() for t in types.split(",")]
+            if excluded_categories:
+                excluded_lower = [c.lower().strip() for c in excluded_categories]
+                if any(t.lower() in excluded_lower for t in types):
+                    return None
 
-                flat = flatten_result(r)
-                flat["source_zip"] = zip_code
-                flat["source_city"] = city
-                flat["source_state"] = state
-                all_results.append(flat)
+            flat = flatten_result(r)
+            flat["search_keyword"] = keyword
+            flat["source_zip"] = zip_code
+            flat["source_city"] = city
+            flat["source_state"] = state
+            return flat
 
-                # Also check mid-zip so we don't overshoot
-                if max_results > 0 and len(all_results) >= max_results:
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            batch_start = 0
+            batch_size = max_workers
+
+            while batch_start < total:
+                if _stop_event.is_set():
+                    save_job_status({
+                        "status": "stopped",
+                        "completed": completed,
+                        "total": total,
+                        "found": found,
+                        "errors": errors,
+                        "output_file": str(output_filepath),
+                        "message": "Stopped by user.",
+                    })
+                    return
+
+                if max_results > 0 and found >= max_results:
                     break
 
-        except Exception as e:
-            errors += 1
-            if errors <= 5:
-                st.warning(f"Error on zip {zip_code}: {e}")
+                batch_end = min(batch_start + batch_size, total)
+                futures = {}
+                for row_data in zip_rows[batch_start:batch_end]:
+                    zip_code, city, state = row_data
+                    future = executor.submit(_fetch_zip, keyword, zip_code, country)
+                    futures[future] = (zip_code, city, state)
 
-        # Rate limiting
-        if delay > 0:
-            time.sleep(delay)
+                batch_new = []
+                for future in as_completed(futures):
+                    zip_code, city, state = futures[future]
+                    completed += 1
 
-        # Update live results every 50 zips
-        if (i + 1) % 50 == 0 and all_results:
-            with results_container:
-                st.metric("Businesses found so far", len(all_results))
+                    try:
+                        results = future.result()
+                        for r in results:
+                            flat = process_result(r, zip_code, city, state)
+                            if flat:
+                                batch_new.append(flat)
+                                found += 1
+                                if max_results > 0 and found >= max_results:
+                                    break
+                    except Exception:
+                        errors += 1
 
-    return all_results
+                    # Update status file every zip
+                    save_job_status({
+                        "status": "running",
+                        "completed": completed,
+                        "total": total,
+                        "found": found,
+                        "errors": errors,
+                        "output_file": str(output_filepath),
+                    })
+
+                save_batch_to_disk(batch_new)
+
+                if delay > 0:
+                    time.sleep(delay)
+
+                batch_start = batch_end
+
+        save_job_status({
+            "status": "completed",
+            "completed": completed,
+            "total": total,
+            "found": found,
+            "errors": errors,
+            "output_file": str(output_filepath),
+            "finished_at": datetime.now().isoformat(),
+        })
+    except Exception as e:
+        save_job_status({
+            "status": "error",
+            "message": str(e),
+            "output_file": str(output_filepath),
+        })
+    finally:
+        _scrape_lock.release()
+
+
+def start_scrape_job(keyword, zip_rows, country, excluded_categories,
+                     initial_seen_ids, output_filepath, delay, max_results,
+                     max_workers):
+    """Launch the scrape in a background daemon thread."""
+    t = threading.Thread(
+        target=_run_scrape_background,
+        args=(keyword, zip_rows, country, excluded_categories,
+              initial_seen_ids, output_filepath, delay, max_results,
+              max_workers),
+        daemon=True,
+    )
+    t.start()
+
+
+def stop_scrape_job():
+    """Signal the background scrape to stop."""
+    _stop_event.set()
 
 
 # --- Streamlit UI ---
@@ -207,6 +363,182 @@ st.markdown("""
 st.title("🗺️ Google Maps Scraper")
 st.caption("Search for businesses across the United States or Europe")
 
+# --- Check for running/completed job ---
+job = load_job_status()
+
+if job and job.get("status") == "running":
+    st.info(f"**Scrape in progress** — {job['completed']}/{job['total']} zips | "
+            f"Found: {job['found']:,} businesses | Errors: {job['errors']}")
+    progress = job["completed"] / job["total"] if job["total"] > 0 else 0
+    st.progress(min(progress, 1.0))
+
+    if st.button("Stop Scraping", use_container_width=True, type="secondary"):
+        stop_scrape_job()
+        st.warning("Stop signal sent. Waiting for current batch to finish...")
+
+    # Auto-refresh every 2 seconds to show progress
+    time.sleep(2)
+    st.rerun()
+
+elif job and job.get("status") in ("completed", "stopped"):
+    output_file = Path(job.get("output_file", ""))
+    status_label = "Scrape completed" if job["status"] == "completed" else "Scrape stopped"
+    st.success(f"**{status_label}** — Found **{job.get('found', 0):,}** businesses "
+               f"({job.get('completed', 0)}/{job.get('total', 0)} zips, {job.get('errors', 0)} errors)")
+
+    if output_file.exists():
+        df_results = pd.read_csv(output_file)
+        if "place_id" in df_results.columns:
+            before = len(df_results)
+            df_results = df_results.drop_duplicates(subset=["place_id"], keep="first")
+            dupes = before - len(df_results)
+            if dupes:
+                df_results.to_csv(output_file, index=False)
+                st.info(f"Removed {dupes} duplicates")
+
+        st.dataframe(df_results, use_container_width=True, height=400)
+        st.download_button(
+            "Download CSV",
+            df_results.to_csv(index=False),
+            file_name=output_file.name,
+            mime="text/csv",
+            use_container_width=True,
+        )
+
+        # Clay webhook
+        st.divider()
+        st.subheader("Send to Clay")
+        clay_url = st.text_input(
+            "Clay Webhook URL",
+            value=os.getenv("CLAY_WEBHOOK_URL", ""),
+            help="Paste your Clay webhook URL to send results",
+        )
+        if st.button("Send to Clay", use_container_width=True):
+            if clay_url:
+                clay_progress = st.progress(0)
+                clay_status = st.empty()
+
+                def on_clay_progress(current, total, sent, errors):
+                    clay_progress.progress(current / total)
+                    clay_status.text(f"Sending row {current}/{total} — Sent: {sent} | Errors: {errors}")
+
+                try:
+                    result = send_to_clay(
+                        df_results.to_dict("records"),
+                        webhook_url=clay_url,
+                        on_progress=on_clay_progress,
+                    )
+                    clay_progress.progress(1.0)
+                    st.success(f"Done! Sent {result['sent']}/{result['total']} rows to Clay. Errors: {result['errors']}")
+                except Exception as e:
+                    st.error(f"Failed to send to Clay: {e}")
+            else:
+                st.warning("Enter a Clay webhook URL first")
+
+        # Apify actor integration
+        st.divider()
+        st.subheader("Process with Apify Actor")
+        apify_actor = st.text_input(
+            "Apify Actor Name",
+            value=os.getenv("APIFY_ACTOR_NAME", ""),
+            placeholder="e.g., creator-account/csv---webhook",
+            help="Full actor identifier to process the CSV data",
+        )
+        apify_wait = st.checkbox("Wait for actor to complete", value=False, help="Poll for run completion")
+
+        filename = output_file.name
+        apify_log = load_apify_log()
+        if filename in apify_log:
+            prev = apify_log[filename]
+            st.warning(f"Already sent to Apify on {prev.get('sent_at', '?')} — Run ID: `{prev.get('run_id', '?')}`")
+
+        if st.button("Send to Apify Actor", use_container_width=True):
+            if apify_actor:
+                apify_progress = st.progress(0)
+                apify_status = st.empty()
+
+                try:
+                    csv_content = df_results.to_csv(index=False)
+                    apify_status.text("Uploading CSV to Apify key-value store and starting actor...")
+
+                    def on_apify_progress(msg):
+                        apify_status.text(f"Status: {msg}")
+
+                    max_wait = 300 if apify_wait else 0
+                    result = run_actor_with_csv(
+                        apify_actor,
+                        csv_content,
+                        file_key_name=filename,
+                        poll_interval=5,
+                        max_wait=max_wait,
+                        on_progress=on_apify_progress,
+                    )
+
+                    if "error" in result:
+                        apify_status.error(f"Error: {result['error']}")
+                    else:
+                        apify_progress.progress(1.0)
+                        run_id = result.get("run_id", "unknown")
+                        run_status = result.get("run_status", "")
+                        file_key = result.get("file_key", "")
+
+                        apify_log[filename] = {
+                            "run_id": run_id,
+                            "file_key": file_key,
+                            "run_status": run_status,
+                            "sent_at": datetime.now().isoformat(),
+                        }
+                        save_apify_log(apify_log)
+
+                        if run_status == "SUCCEEDED":
+                            st.success("Actor completed successfully!")
+                        elif run_status == "FAILED":
+                            st.error("Actor run failed.")
+                        elif run_status == "STARTED":
+                            st.info("Actor started — running in background.")
+                        else:
+                            apify_status.info(f"Actor status: {run_status}")
+
+                        st.markdown(f"""
+**Run ID:** `{run_id}`
+**File Key:** `{file_key}`
+**Status:** `{run_status}`
+
+[View run on Apify](https://console.apify.com/actors/runs/{run_id})
+""")
+                except Exception as e:
+                    apify_status.error(f"Failed to run actor: {e}")
+            else:
+                st.warning("Enter an Apify actor name first")
+
+        st.caption(f"Results saved to `{output_file}`")
+
+    if st.button("Dismiss & Start New Scrape", use_container_width=True):
+        clear_job_status()
+        st.rerun()
+    st.stop()
+
+elif job and job.get("status") == "error":
+    st.error(f"Last scrape failed: {job.get('message', 'Unknown error')}")
+    output_file = Path(job.get("output_file", ""))
+    if output_file.exists():
+        st.info("Partial results were saved to disk.")
+        df_partial = pd.read_csv(output_file)
+        st.dataframe(df_partial, use_container_width=True, height=300)
+        st.download_button(
+            "Download Partial CSV",
+            df_partial.to_csv(index=False),
+            file_name=output_file.name,
+            mime="text/csv",
+            use_container_width=True,
+        )
+    if st.button("Dismiss & Start New Scrape", use_container_width=True):
+        clear_job_status()
+        st.rerun()
+    st.stop()
+
+
+# --- Main search form (only shown when no job is running) ---
 # Load zip codes
 zips_df = load_zip_codes()
 all_states = get_states(zips_df)
@@ -230,7 +562,7 @@ EU_COUNTRY_CODES = {
     "Malta": "mt", "Cyprus": "cy",
 }
 
-# --- Search Config (no form, just regular widgets for conditional rendering) ---
+# --- Search Config ---
 keyword = st.text_input(
     "What are you searching for?",
     placeholder="e.g., hotel, restaurant, cafe, lawyer",
@@ -282,6 +614,12 @@ max_results = st.number_input(
     help="Stop scraping after reaching this many businesses.",
 )
 
+auto_exclude = st.checkbox(
+    "Auto-exclude already scraped businesses",
+    value=True,
+    help="Skips entire zip codes already scraped for the same keyword (saves API credits) and deduplicates by place_id",
+)
+
 with st.expander("Advanced options"):
     excluded_categories = st.text_input(
         "Exclude business categories (comma-separated)",
@@ -292,12 +630,14 @@ with st.expander("Advanced options"):
         placeholder="e.g., motel, bed and breakfast",
         help="Run multiple category searches in one run",
     )
-    delay = st.slider("Delay between requests (seconds)", 0.0, 2.0, 0.3, 0.1)
+    delay = st.slider("Delay between batches (seconds)", 0.0, 2.0, 0.3, 0.1)
+    max_workers = st.slider("Concurrent requests", 1, 20, 5, 1,
+                            help="Number of zip codes to scrape in parallel. Higher = faster but more API load.")
 
 # --- Start button ---
 submitted = st.button("Start Scraping", use_container_width=True, type="primary")
 
-# --- Run Scraper ---
+# --- Launch background scrape ---
 if submitted and keyword:
     keywords = [keyword.strip()]
     if additional_keywords:
@@ -305,7 +645,8 @@ if submitted and keyword:
 
     excluded_cats = [c.strip() for c in excluded_categories.split(",") if c.strip()] if excluded_categories else []
 
-    all_results = []
+    # Build the list of (zip_code, city, state) tuples to scrape
+    zip_rows = []
 
     if market == "United States":
         filtered_zips = filter_zip_codes(
@@ -318,217 +659,81 @@ if submitted and keyword:
 
         if filtered_zips.empty:
             st.error("No zip codes match your filters. Adjust your selection.")
-        else:
-            st.info(f"Searching **{len(keywords)} keyword(s)** across **{len(filtered_zips):,} zip codes**")
+            st.stop()
 
-            for kw in keywords:
-                st.subheader(f"Searching: {kw}")
-                progress_bar = st.progress(0)
-                status_text = st.empty()
-                results_container = st.empty()
-
-                results = run_scrape(
-                    kw, filtered_zips, "us", excluded_cats,
-                    progress_bar, status_text, results_container, delay=delay,
-                    max_results=max_results,
-                )
-                all_results.extend(results)
-                st.success(f"Found **{len(results)}** businesses for '{kw}'")
+        for _, row in filtered_zips.iterrows():
+            zip_code = row["zipcode"]
+            city = row["city"]
+            state = row["state_abbr"] if "state_abbr" in row else row.get("state", "")
+            zip_rows.append((zip_code, city, state))
 
     else:
+        # Europe — build pseudo zip_rows from cities/countries
         cities_to_search = []
         if scope == "Specific Cities" and eu_city_input:
             cities_to_search = [c.strip() for c in eu_city_input.split(",") if c.strip()]
         elif scope == "Specific Countries" and selected_eu_countries:
-            for country_name in selected_eu_countries:
-                cities_to_search.append(country_name)
+            cities_to_search = list(selected_eu_countries)
 
         if not cities_to_search:
             st.error("Please select countries or enter cities to search.")
-        else:
-            st.info(f"Searching **{len(keywords)} keyword(s)** across **{len(cities_to_search)} locations**")
+            st.stop()
 
-            for kw in keywords:
-                st.subheader(f"Searching: {kw}")
-                progress_bar = st.progress(0)
-                status_text = st.empty()
-                seen_place_ids = set()
+        for loc in cities_to_search:
+            cc = EU_COUNTRY_CODES.get(loc, "")
+            zip_rows.append((loc, loc, cc))
 
-                for j, location in enumerate(cities_to_search):
-                    progress_bar.progress((j + 1) / len(cities_to_search))
-                    status_text.text(f"Searching '{kw}' in {location} — {j+1}/{len(cities_to_search)}")
+    # Auto-exclude: filter out already-scraped zips and get seen place_ids
+    pre_seen = set()
+    if auto_exclude:
+        for kw in keywords:
+            place_ids, scraped_zips = load_past_scraped_data(keyword=kw)
+            pre_seen.update(place_ids)
+            before = len(zip_rows)
+            if market == "United States":
+                zip_rows = [(z, c, s) for z, c, s in zip_rows if z not in scraped_zips]
+            skipped = before - len(zip_rows)
+            if skipped or pre_seen:
+                st.info(f"Auto-excluding **{len(pre_seen):,}** businesses, "
+                        f"skipping **{skipped:,}** already-scraped zip codes")
 
-                    cc = EU_COUNTRY_CODES.get(location, "")
-                    query = f"{kw} in {location}"
+    if not zip_rows:
+        st.success("All zip codes already scraped. Nothing to do.")
+        st.stop()
 
-                    try:
-                        results = search_maps(query=query, country=cc or "gb", limit=20)
-                        for r in results:
-                            place_id = r.get("place_id", r.get("business_id", ""))
-                            if place_id and place_id in seen_place_ids:
-                                continue
-                            if place_id:
-                                seen_place_ids.add(place_id)
+    # Generate output filename
+    filename = build_csv_filename(
+        keyword, market, scope,
+        states=selected_states or None,
+        cities=selected_cities or (eu_city_input.split(",") if eu_city_input else None),
+        count=0,
+    )
+    filepath = RESULTS_DIR / filename
 
-                            types = r.get("types", [])
-                            if isinstance(types, str):
-                                types = [t.strip() for t in types.split(",")]
-                            if excluded_cats and any(t.lower() in [c.lower() for c in excluded_cats] for t in types):
-                                continue
+    # Determine country code for API
+    if market == "United States":
+        api_country = "us"
+    else:
+        api_country = EU_COUNTRY_CODES.get(zip_rows[0][2], "gb") if zip_rows else "gb"
 
-                            flat = flatten_result(r)
-                            flat["source_location"] = location
-                            all_results.append(flat)
-                    except Exception as e:
-                        st.warning(f"Error searching {location}: {e}")
+    # Launch background job
+    # For multiple keywords, we use the first one; additional keywords would need multiple jobs
+    kw = keywords[0]
+    start_scrape_job(
+        keyword=kw,
+        zip_rows=zip_rows,
+        country=api_country if market == "United States" else "",
+        excluded_categories=excluded_cats,
+        initial_seen_ids=pre_seen,
+        output_filepath=filepath,
+        delay=delay,
+        max_results=max_results,
+        max_workers=max_workers,
+    )
 
-                    if delay > 0:
-                        time.sleep(delay)
-
-                st.success(f"Found **{len(all_results)}** businesses for '{kw}'")
-
-    # --- Display & Export Results ---
-    if all_results:
-        st.divider()
-        st.header(f"Results: {len(all_results):,} businesses")
-
-        df_results = pd.DataFrame(all_results)
-
-        if "place_id" in df_results.columns:
-            before = len(df_results)
-            df_results = df_results.drop_duplicates(subset=["place_id"], keep="first")
-            dupes = before - len(df_results)
-            if dupes:
-                st.info(f"Removed {dupes} duplicate businesses")
-
-        st.dataframe(df_results, use_container_width=True, height=400)
-
-        # Save to CSV with descriptive name
-        filename = build_csv_filename(
-            keyword, market, scope,
-            states=selected_states or None,
-            cities=selected_cities or (eu_city_input.split(",") if eu_city_input else None),
-            count=len(df_results),
-        )
-        filepath = RESULTS_DIR / filename
-        df_results.to_csv(filepath, index=False)
-
-        st.download_button(
-            "Download CSV",
-            df_results.to_csv(index=False),
-            file_name=filename,
-            mime="text/csv",
-            use_container_width=True,
-        )
-
-        # Clay webhook
-        st.divider()
-        st.subheader("Send to Clay")
-        clay_url = st.text_input(
-            "Clay Webhook URL",
-            value=os.getenv("CLAY_WEBHOOK_URL", ""),
-            help="Paste your Clay webhook URL to send results",
-        )
-        if st.button("Send to Clay", use_container_width=True):
-            if clay_url:
-                clay_progress = st.progress(0)
-                clay_status = st.empty()
-
-                def on_clay_progress(current, total, sent, errors):
-                    clay_progress.progress(current / total)
-                    clay_status.text(f"Sending row {current}/{total} — Sent: {sent} | Errors: {errors}")
-
-                try:
-                    result = send_to_clay(
-                        df_results.to_dict("records"),
-                        webhook_url=clay_url,
-                        on_progress=on_clay_progress,
-                    )
-                    clay_progress.progress(1.0)
-                    st.success(f"Done! Sent {result['sent']}/{result['total']} rows to Clay. Errors: {result['errors']}")
-                except Exception as e:
-                    st.error(f"Failed to send to Clay: {e}")
-            else:
-                st.warning("Enter a Clay webhook URL first")
-
-        # Apify actor integration
-        st.divider()
-        st.subheader("Process with Apify Actor")
-        apify_actor = st.text_input(
-            "Apify Actor Name",
-            value=os.getenv("APIFY_ACTOR_NAME", ""),
-            placeholder="e.g., creator-account/csv---webhook",
-            help="Full actor identifier to process the CSV data",
-        )
-        apify_wait = st.checkbox("Wait for actor to complete", value=False, help="Poll for run completion")
-
-        # Check if this file was already sent
-        apify_log = load_apify_log()
-        if filename in apify_log:
-            prev = apify_log[filename]
-            st.warning(f"Already sent to Apify on {prev.get('sent_at', '?')} — Run ID: `{prev.get('run_id', '?')}`")
-
-        if st.button("Send to Apify Actor", use_container_width=True):
-            if apify_actor:
-                apify_progress = st.progress(0)
-                apify_status = st.empty()
-
-                try:
-                    csv_content = df_results.to_csv(index=False)
-                    apify_status.text("Uploading CSV to Apify key-value store and starting actor...")
-
-                    def on_apify_progress(msg):
-                        apify_status.text(f"Status: {msg}")
-
-                    max_wait = 300 if apify_wait else 0
-                    result = run_actor_with_csv(
-                        apify_actor,
-                        csv_content,
-                        file_key_name=filename,
-                        poll_interval=5,
-                        max_wait=max_wait,
-                        on_progress=on_apify_progress,
-                    )
-
-                    if "error" in result:
-                        apify_status.error(f"Error: {result['error']}")
-                    else:
-                        apify_progress.progress(1.0)
-                        run_id = result.get("run_id", "unknown")
-                        run_status = result.get("run_status", "")
-                        file_key = result.get("file_key", "")
-
-                        # Log this send
-                        apify_log[filename] = {
-                            "run_id": run_id,
-                            "file_key": file_key,
-                            "run_status": run_status,
-                            "sent_at": datetime.now().isoformat(),
-                        }
-                        save_apify_log(apify_log)
-
-                        if run_status == "SUCCEEDED":
-                            st.success("Actor completed successfully!")
-                        elif run_status == "FAILED":
-                            st.error("Actor run failed.")
-                        elif run_status == "STARTED":
-                            st.info("Actor started — running in background.")
-                        else:
-                            apify_status.info(f"Actor status: {run_status}")
-
-                        st.markdown(f"""
-**Run ID:** `{run_id}`
-**File Key:** `{file_key}`
-**Status:** `{run_status}`
-
-[View run on Apify](https://console.apify.com/actors/runs/{run_id})
-""")
-                except Exception as e:
-                    apify_status.error(f"Failed to run actor: {e}")
-            else:
-                st.warning("Enter an Apify actor name first")
-
-        st.caption(f"Results saved to `{filepath}`")
+    st.success(f"Scrape started in background! Searching **{len(zip_rows):,}** locations for '{kw}'")
+    time.sleep(1)
+    st.rerun()
 
 elif submitted and not keyword:
     st.warning("Please enter a search keyword")
@@ -592,12 +797,11 @@ with st.sidebar:
             st.divider()
             st.markdown("**Apify Actor**")
 
-            # Show if already sent
             sidebar_apify_log = load_apify_log()
             past_fname = selected_file.name
             if past_fname in sidebar_apify_log:
                 prev = sidebar_apify_log[past_fname]
-                st.success(f"Already sent to Apify")
+                st.success("Already sent to Apify")
                 st.code(f"Run ID: {prev.get('run_id', '?')}\nSent: {prev.get('sent_at', '?')}")
                 st.markdown(f"[View on Apify](https://console.apify.com/actors/runs/{prev.get('run_id', '')})")
 
@@ -644,7 +848,6 @@ with st.sidebar:
                             run_status = result.get("run_status", "")
                             file_key = result.get("file_key", "")
 
-                            # Log it
                             sidebar_apify_log[past_fname] = {
                                 "run_id": run_id,
                                 "file_key": file_key,
