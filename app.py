@@ -84,6 +84,12 @@ def run_scrape(keyword, zip_codes_df, country, excluded_categories,
     errors = 0
 
     for i, (_, row) in enumerate(zip_codes_df.iterrows()):
+        # Check max results limit before making another API call
+        if max_results > 0 and len(all_results) >= max_results:
+            progress_bar.progress(1.0)
+            status_text.text(f"Reached max results limit ({max_results}). Stopping. Found {len(all_results)} businesses.")
+            break
+
         zip_code = row["zipcode"]
         city = row["city"]
         state = row["state_abbr"] if "state_abbr" in row else row.get("state", "")
@@ -121,15 +127,14 @@ def run_scrape(keyword, zip_codes_df, country, excluded_categories,
                 flat["source_state"] = state
                 all_results.append(flat)
 
+                # Also check mid-zip so we don't overshoot
+                if max_results > 0 and len(all_results) >= max_results:
+                    break
+
         except Exception as e:
             errors += 1
             if errors <= 5:
                 st.warning(f"Error on zip {zip_code}: {e}")
-
-        # Check max results limit
-        if max_results > 0 and len(all_results) >= max_results:
-            status_text.text(f"Reached max results limit ({max_results}). Stopping.")
-            break
 
         # Rate limiting
         if delay > 0:
@@ -233,12 +238,12 @@ else:
 
 st.divider()
 
-# --- Advanced options in expander ---
+max_results = st.number_input(
+    "Max results (0 = unlimited)", min_value=0, value=0, step=10,
+    help="Stop scraping after reaching this many businesses.",
+)
+
 with st.expander("Advanced options"):
-    max_results = st.number_input(
-        "Max results (0 = unlimited)", min_value=0, value=0, step=500,
-        help="Stop scraping after reaching this many businesses.",
-    )
     excluded_categories = st.text_input(
         "Exclude business categories (comma-separated)",
         placeholder="e.g., gas_station, atm, parking",
