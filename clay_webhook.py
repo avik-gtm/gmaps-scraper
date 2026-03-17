@@ -1,4 +1,5 @@
 import os
+import time
 import httpx
 
 try:
@@ -12,7 +13,7 @@ except Exception:
 
 def send_to_clay(results: list[dict], webhook_url: str = None,
                  on_progress=None) -> dict:
-    """Send scraped results to a Clay webhook, one row per request."""
+    """Send scraped results to a Clay webhook, one row per request with retry."""
     url = webhook_url or CLAY_WEBHOOK_URL
     if not url:
         return {"error": "No Clay webhook URL configured."}
@@ -21,14 +22,31 @@ def send_to_clay(results: list[dict], webhook_url: str = None,
     errors = 0
     with httpx.Client(timeout=30) as client:
         for i, row in enumerate(results):
-            try:
-                resp = client.post(url, json=row)
-                resp.raise_for_status()
-                sent += 1
-            except Exception:
+            success = False
+            for attempt in range(3):
+                try:
+                    resp = client.post(url, json=row)
+                    resp.raise_for_status()
+                    sent += 1
+                    success = True
+                    break
+                except httpx.HTTPStatusError as e:
+                    if e.response.status_code == 429:
+                        # Rate limited — back off and retry
+                        wait = 2 ** attempt
+                        time.sleep(wait)
+                    else:
+                        break
+                except Exception:
+                    break
+
+            if not success:
                 errors += 1
 
             if on_progress:
                 on_progress(i + 1, len(results), sent, errors)
+
+            # Small delay between requests to avoid rate limits
+            time.sleep(0.1)
 
     return {"status": "done", "sent": sent, "errors": errors, "total": len(results)}
