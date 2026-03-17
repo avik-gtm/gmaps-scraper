@@ -1,0 +1,6 @@
+.env
+.streamlit/secrets.toml
+results/
+__pycache__/
+*.pyc
+.DS_Store
