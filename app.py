@@ -445,8 +445,25 @@ if submitted and keyword:
                     else:
                         apify_progress.progress(1.0)
                         run_id = result.get("run_id", "unknown")
-                        run_status = result.get("run_status", result.get("status", ""))
-                        apify_status.success(f"Actor run: {run_id} ({run_status})")
+                        run_status = result.get("run_status", "")
+                        file_key = result.get("file_key", "")
+
+                        if run_status == "SUCCEEDED":
+                            st.success(f"Actor completed successfully!")
+                        elif run_status == "FAILED":
+                            st.error(f"Actor run failed.")
+                        elif run_status == "STARTED":
+                            st.info("Actor started — running in background.")
+                        else:
+                            apify_status.info(f"Actor status: {run_status}")
+
+                        st.markdown(f"""
+**Run ID:** `{run_id}`
+**File Key:** `{file_key}`
+**Status:** `{run_status}`
+
+[View run on Apify](https://console.apify.com/actors/runs/{run_id})
+""")
                 except Exception as e:
                     apify_status.error(f"Failed to run actor: {e}")
             else:
@@ -552,8 +569,18 @@ with st.sidebar:
                         else:
                             past_apify_progress.progress(1.0)
                             run_id = result.get("run_id", "unknown")
-                            run_status = result.get("run_status", result.get("status", ""))
-                            past_apify_status.success(f"Run: {run_id} ({run_status})")
+                            run_status = result.get("run_status", "")
+                            file_key = result.get("file_key", "")
+
+                            if run_status == "SUCCEEDED":
+                                st.success("Actor completed!")
+                            elif run_status == "STARTED":
+                                st.info("Actor running in background.")
+                            else:
+                                past_apify_status.info(f"Status: {run_status}")
+
+                            st.code(f"Run ID: {run_id}\nFile: {file_key}\nStatus: {run_status}")
+                            st.markdown(f"[View on Apify](https://console.apify.com/actors/runs/{run_id})")
                     except Exception as e:
                         past_apify_status.error(f"Failed: {e}")
                 else:
