@@ -15,6 +15,30 @@ RESULTS_DIR = Path(__file__).parent / "results"
 RESULTS_DIR.mkdir(exist_ok=True)
 
 
+# --- Password Protection ---
+def check_password():
+    """Returns True if the user has entered the correct password."""
+    if "authenticated" not in st.session_state:
+        st.session_state.authenticated = False
+
+    if st.session_state.authenticated:
+        return True
+
+    password = st.secrets.get("APP_PASSWORD", "")
+    if not password:
+        return True  # No password set, skip auth
+
+    st.markdown("### Please enter the password to continue")
+    entered = st.text_input("Password", type="password")
+    if st.button("Login", use_container_width=True):
+        if entered == password:
+            st.session_state.authenticated = True
+            st.rerun()
+        else:
+            st.error("Incorrect password")
+    return False
+
+
 @st.cache_data
 def load_zip_codes():
     df = pd.read_csv(ZIP_CSV, dtype={"zipcode": str})
@@ -121,6 +145,9 @@ def run_scrape(keyword, zip_codes_df, country, excluded_categories,
 
 # --- Streamlit UI ---
 st.set_page_config(page_title="Google Maps Scraper", page_icon="🗺️", layout="wide")
+
+if not check_password():
+    st.stop()
 
 st.markdown("""
 <style>
