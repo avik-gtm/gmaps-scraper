@@ -6,11 +6,14 @@ import pandas as pd
 import streamlit as st
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from scraper_tech import search_maps_all_pages, flatten_result
 from clay_webhook import send_to_clay
-from apify_actor import run_actor_with_csv
+from apify_actor import (
+    run_actor_with_csv, upload_to_kv_store,
+    download_from_kv_store, list_kv_store_keys,
+)
 
 # --- Config ---
 ZIP_CSV = Path(__file__).parent / "us_zip_codes.csv"
@@ -21,7 +24,6 @@ JOB_STATUS_FILE = RESULTS_DIR / "scrape_job.json"
 
 
 def load_apify_log():
-    """Load log of CSVs that have been sent to Apify."""
     if APIFY_LOG_FILE.exists():
         return json.loads(APIFY_LOG_FILE.read_text())
     return {}
@@ -32,7 +34,6 @@ def save_apify_log(log: dict):
 
 
 def build_csv_filename(keyword, market, scope, states=None, cities=None, count=0):
-    """Build a descriptive CSV filename."""
     parts = ["gmaps", keyword.replace(" ", "-")]
 
     if market == "Europe":
@@ -57,8 +58,9 @@ def build_csv_filename(keyword, market, scope, states=None, cities=None, count=0
     return "_".join(parts) + ".csv"
 
 
-# --- Job status (written to disk so it survives reruns/tab closes) ---
+# --- Job status ---
 def save_job_status(status: dict):
+    status["updated_at"] = datetime.now().isoformat()
     JOB_STATUS_FILE.write_text(json.dumps(status, indent=2))
 
 
@@ -76,9 +78,46 @@ def clear_job_status():
         JOB_STATUS_FILE.unlink()
 
 
+def is_job_stale(job: dict, max_age_minutes: int = 5) -> bool:
+    """Check if a 'running' job is stale (thread died from app sleep/restart)."""
+    updated = job.get("updated_at")
+    if not updated:
+        return True
+    try:
+        last_update = datetime.fromisoformat(updated)
+        return datetime.now() - last_update > timedelta(minutes=max_age_minutes)
+    except (ValueError, TypeError):
+        return True
+
+
+# --- Cloud sync: persist CSVs to Apify KV store ---
+def sync_results_from_cloud():
+    """Download any CSVs from Apify KV store that aren't on local disk."""
+    remote_keys = list_kv_store_keys(prefix="gmaps")
+    local_files = {f.name for f in RESULTS_DIR.glob("*.csv")}
+    downloaded = 0
+
+    for key in remote_keys:
+        if key not in local_files:
+            csv_data = download_from_kv_store(key)
+            if csv_data:
+                (RESULTS_DIR / key).write_text(csv_data)
+                downloaded += 1
+
+    return downloaded
+
+
+def upload_result_to_cloud(filepath: Path):
+    """Upload a CSV result to Apify KV store for persistence."""
+    try:
+        csv_data = filepath.read_text()
+        upload_to_kv_store(filepath.name, csv_data)
+    except Exception:
+        pass  # Non-critical, don't break the flow
+
+
 # --- Password Protection ---
 def check_password():
-    """Returns True if the user has entered the correct password."""
     if "authenticated" not in st.session_state:
         st.session_state.authenticated = False
 
@@ -87,7 +126,7 @@ def check_password():
 
     password = st.secrets.get("APP_PASSWORD", "")
     if not password:
-        return True  # No password set, skip auth
+        return True
 
     st.markdown("### Please enter the password to continue")
     entered = st.text_input("Password", type="password")
@@ -119,7 +158,6 @@ def get_cities(df, states=None):
 
 def filter_zip_codes(df, scope, selected_states=None, selected_cities=None,
                      excluded_states=None, excluded_cities=None):
-    """Filter zip codes based on scope and include/exclude filters."""
     filtered = df.copy()
 
     if scope == "Specific States" and selected_states:
@@ -136,13 +174,7 @@ def filter_zip_codes(df, scope, selected_states=None, selected_cities=None,
 
 
 def load_past_scraped_data(keyword: str = None) -> tuple[set, set]:
-    """Load place_ids and scraped zip codes from past CSVs.
-
-    If keyword is provided, only considers CSVs where search_keyword matches
-    for zip-level skipping. Place_id exclusion is always global.
-
-    Returns (place_ids, scraped_zips).
-    """
+    """Load place_ids and scraped zip codes from past CSVs."""
     place_ids = set()
     scraped_zips = set()
     for csv_file in RESULTS_DIR.glob("*.csv"):
@@ -170,13 +202,11 @@ def load_past_scraped_data(keyword: str = None) -> tuple[set, set]:
 
 
 # --- Background scraper ---
-# Use a module-level lock so only one scrape runs at a time
 _scrape_lock = threading.Lock()
 _stop_event = threading.Event()
 
 
 def _fetch_zip(keyword, zip_code, country):
-    """Fetch all results for a single zip code. Runs in a thread."""
     query = f"{keyword} in {zip_code}"
     return search_maps_all_pages(query=query, country=country)
 
@@ -184,7 +214,6 @@ def _fetch_zip(keyword, zip_code, country):
 def _run_scrape_background(keyword, zip_rows, country, excluded_categories,
                            initial_seen_ids, output_filepath, delay, max_results,
                            max_workers):
-    """Background scrape function — writes results to disk and updates status file."""
     if not _scrape_lock.acquire(blocking=False):
         save_job_status({"status": "error", "message": "Another scrape is already running."})
         return
@@ -259,6 +288,8 @@ def _run_scrape_background(keyword, zip_rows, country, excluded_categories,
                         "output_file": str(output_filepath),
                         "message": "Stopped by user.",
                     })
+                    # Upload partial results to cloud
+                    upload_result_to_cloud(output_filepath)
                     return
 
                 if max_results > 0 and found >= max_results:
@@ -288,7 +319,6 @@ def _run_scrape_background(keyword, zip_rows, country, excluded_categories,
                     except Exception:
                         errors += 1
 
-                    # Update status file every zip
                     save_job_status({
                         "status": "running",
                         "completed": completed,
@@ -305,6 +335,9 @@ def _run_scrape_background(keyword, zip_rows, country, excluded_categories,
 
                 batch_start = batch_end
 
+        # Upload completed results to cloud
+        upload_result_to_cloud(output_filepath)
+
         save_job_status({
             "status": "completed",
             "completed": completed,
@@ -320,6 +353,9 @@ def _run_scrape_background(keyword, zip_rows, country, excluded_categories,
             "message": str(e),
             "output_file": str(output_filepath),
         })
+        # Try to upload whatever we have
+        if output_filepath.exists():
+            upload_result_to_cloud(output_filepath)
     finally:
         _scrape_lock.release()
 
@@ -327,7 +363,6 @@ def _run_scrape_background(keyword, zip_rows, country, excluded_categories,
 def start_scrape_job(keyword, zip_rows, country, excluded_categories,
                      initial_seen_ids, output_filepath, delay, max_results,
                      max_workers):
-    """Launch the scrape in a background daemon thread."""
     t = threading.Thread(
         target=_run_scrape_background,
         args=(keyword, zip_rows, country, excluded_categories,
@@ -339,7 +374,6 @@ def start_scrape_job(keyword, zip_rows, country, excluded_categories,
 
 
 def stop_scrape_job():
-    """Signal the background scrape to stop."""
     _stop_event.set()
 
 
@@ -363,10 +397,42 @@ st.markdown("""
 st.title("🗺️ Google Maps Scraper")
 st.caption("Search for businesses across the United States or Europe")
 
+# --- On startup: sync past results from cloud ---
+if "_cloud_synced" not in st.session_state:
+    with st.spinner("Syncing past results from cloud..."):
+        downloaded = sync_results_from_cloud()
+    if downloaded:
+        st.toast(f"Restored {downloaded} past scrape(s) from cloud")
+    st.session_state["_cloud_synced"] = True
+
 # --- Check for running/completed job ---
 job = load_job_status()
 
-if job and job.get("status") == "running":
+# Detect stale "running" jobs (thread died from app sleep/restart)
+if job and job.get("status") == "running" and is_job_stale(job):
+    output_file = Path(job.get("output_file", ""))
+    st.warning(f"**Previous scrape was interrupted** (app went to sleep). "
+               f"Found {job.get('found', 0):,} businesses before interruption.")
+
+    if output_file.exists():
+        st.info("Partial results were saved. You can download them or re-run to continue "
+                "(auto-exclude will skip already-scraped zip codes).")
+        df_partial = pd.read_csv(output_file)
+        st.dataframe(df_partial, use_container_width=True, height=300)
+        st.download_button(
+            "Download Partial CSV",
+            df_partial.to_csv(index=False),
+            file_name=output_file.name,
+            mime="text/csv",
+            use_container_width=True,
+        )
+
+    if st.button("Dismiss & Continue", use_container_width=True):
+        clear_job_status()
+        st.rerun()
+    st.stop()
+
+elif job and job.get("status") == "running":
     st.info(f"**Scrape in progress** — {job['completed']}/{job['total']} zips | "
             f"Found: {job['found']:,} businesses | Errors: {job['errors']}")
     progress = job["completed"] / job["total"] if job["total"] > 0 else 0
@@ -376,7 +442,6 @@ if job and job.get("status") == "running":
         stop_scrape_job()
         st.warning("Stop signal sent. Waiting for current batch to finish...")
 
-    # Auto-refresh every 2 seconds to show progress
     time.sleep(2)
     st.rerun()
 
@@ -522,7 +587,7 @@ elif job and job.get("status") == "error":
     st.error(f"Last scrape failed: {job.get('message', 'Unknown error')}")
     output_file = Path(job.get("output_file", ""))
     if output_file.exists():
-        st.info("Partial results were saved to disk.")
+        st.info("Partial results were saved.")
         df_partial = pd.read_csv(output_file)
         st.dataframe(df_partial, use_container_width=True, height=300)
         st.download_button(
@@ -538,12 +603,10 @@ elif job and job.get("status") == "error":
     st.stop()
 
 
-# --- Main search form (only shown when no job is running) ---
-# Load zip codes
+# --- Main search form (only shown when no job is active) ---
 zips_df = load_zip_codes()
 all_states = get_states(zips_df)
 
-# --- Constants ---
 EUROPEAN_COUNTRIES = [
     "United Kingdom", "Germany", "France", "Spain", "Italy", "Netherlands",
     "Belgium", "Switzerland", "Austria", "Sweden", "Norway", "Denmark",
@@ -562,7 +625,6 @@ EU_COUNTRY_CODES = {
     "Malta": "mt", "Cyprus": "cy",
 }
 
-# --- Search Config ---
 keyword = st.text_input(
     "What are you searching for?",
     placeholder="e.g., hotel, restaurant, cafe, lawyer",
@@ -573,7 +635,6 @@ col1, col2 = st.columns(2)
 with col1:
     market = st.radio("Market", ["United States", "Europe"], horizontal=True)
 
-# --- Scope + filters based on market ---
 selected_states = []
 selected_cities = []
 excluded_states = []
@@ -634,10 +695,8 @@ with st.expander("Advanced options"):
     max_workers = st.slider("Concurrent requests", 1, 20, 5, 1,
                             help="Number of zip codes to scrape in parallel. Higher = faster but more API load.")
 
-# --- Start button ---
 submitted = st.button("Start Scraping", use_container_width=True, type="primary")
 
-# --- Launch background scrape ---
 if submitted and keyword:
     keywords = [keyword.strip()]
     if additional_keywords:
@@ -645,7 +704,6 @@ if submitted and keyword:
 
     excluded_cats = [c.strip() for c in excluded_categories.split(",") if c.strip()] if excluded_categories else []
 
-    # Build the list of (zip_code, city, state) tuples to scrape
     zip_rows = []
 
     if market == "United States":
@@ -668,7 +726,6 @@ if submitted and keyword:
             zip_rows.append((zip_code, city, state))
 
     else:
-        # Europe — build pseudo zip_rows from cities/countries
         cities_to_search = []
         if scope == "Specific Cities" and eu_city_input:
             cities_to_search = [c.strip() for c in eu_city_input.split(",") if c.strip()]
@@ -683,7 +740,6 @@ if submitted and keyword:
             cc = EU_COUNTRY_CODES.get(loc, "")
             zip_rows.append((loc, loc, cc))
 
-    # Auto-exclude: filter out already-scraped zips and get seen place_ids
     pre_seen = set()
     if auto_exclude:
         for kw in keywords:
@@ -701,7 +757,6 @@ if submitted and keyword:
         st.success("All zip codes already scraped. Nothing to do.")
         st.stop()
 
-    # Generate output filename
     filename = build_csv_filename(
         keyword, market, scope,
         states=selected_states or None,
@@ -710,14 +765,11 @@ if submitted and keyword:
     )
     filepath = RESULTS_DIR / filename
 
-    # Determine country code for API
     if market == "United States":
         api_country = "us"
     else:
         api_country = EU_COUNTRY_CODES.get(zip_rows[0][2], "gb") if zip_rows else "gb"
 
-    # Launch background job
-    # For multiple keywords, we use the first one; additional keywords would need multiple jobs
     kw = keywords[0]
     start_scrape_job(
         keyword=kw,
@@ -731,7 +783,7 @@ if submitted and keyword:
         max_workers=max_workers,
     )
 
-    st.success(f"Scrape started in background! Searching **{len(zip_rows):,}** locations for '{kw}'")
+    st.success(f"Scrape started! Searching **{len(zip_rows):,}** locations for '{kw}'")
     time.sleep(1)
     st.rerun()
 
@@ -754,7 +806,6 @@ with st.sidebar:
             st.metric("Rows", len(past_df))
             st.dataframe(past_df, use_container_width=True, height=300)
 
-            # Download
             st.download_button(
                 "Download CSV",
                 past_df.to_csv(index=False),
@@ -764,7 +815,6 @@ with st.sidebar:
                 key="sidebar_download",
             )
 
-            # Send to Clay
             st.divider()
             past_clay_url = st.text_input(
                 "Clay Webhook URL",
@@ -793,7 +843,6 @@ with st.sidebar:
                 else:
                     st.warning("Enter a Clay webhook URL")
 
-            # Apify actor for past scrapes
             st.divider()
             st.markdown("**Apify Actor**")
 

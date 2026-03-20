@@ -14,6 +14,70 @@ except Exception:
     APIFY_KV_STORE_ID = os.getenv("APIFY_KV_STORE_ID", "")
 
 
+def upload_to_kv_store(file_key: str, csv_data: str, api_key: str = None,
+                       store_id: str = None) -> dict:
+    """Upload a CSV to the Apify key-value store."""
+    key = api_key or APIFY_API_KEY
+    sid = store_id or APIFY_KV_STORE_ID
+    if not key or not sid:
+        return {"error": "No Apify API key or KV store ID configured."}
+
+    try:
+        url = f"https://api.apify.com/v2/key-value-stores/{sid}/records/{file_key}"
+        headers = {"Authorization": f"Bearer {key}", "Content-Type": "text/csv"}
+        with httpx.Client(timeout=60) as client:
+            resp = client.put(url, content=csv_data, headers=headers)
+            resp.raise_for_status()
+        return {"success": True, "file_key": file_key}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def download_from_kv_store(file_key: str, api_key: str = None,
+                           store_id: str = None) -> str | None:
+    """Download a CSV from the Apify key-value store. Returns CSV string or None."""
+    key = api_key or APIFY_API_KEY
+    sid = store_id or APIFY_KV_STORE_ID
+    if not key or not sid:
+        return None
+
+    try:
+        url = f"https://api.apify.com/v2/key-value-stores/{sid}/records/{file_key}"
+        headers = {"Authorization": f"Bearer {key}"}
+        with httpx.Client(timeout=60) as client:
+            resp = client.get(url, headers=headers)
+            resp.raise_for_status()
+            return resp.text
+    except Exception:
+        return None
+
+
+def list_kv_store_keys(api_key: str = None, store_id: str = None,
+                       prefix: str = "gmaps") -> list[str]:
+    """List all keys in the Apify key-value store matching a prefix."""
+    key = api_key or APIFY_API_KEY
+    sid = store_id or APIFY_KV_STORE_ID
+    if not key or not sid:
+        return []
+
+    keys = []
+    try:
+        url = f"https://api.apify.com/v2/key-value-stores/{sid}/keys"
+        headers = {"Authorization": f"Bearer {key}"}
+        params = {"limit": 1000}
+        with httpx.Client(timeout=30) as client:
+            resp = client.get(url, headers=headers, params=params)
+            resp.raise_for_status()
+            data = resp.json()
+            for item in data.get("data", {}).get("items", []):
+                k = item.get("key", "")
+                if k.startswith(prefix) and k.endswith(".csv"):
+                    keys.append(k)
+    except Exception:
+        pass
+    return keys
+
+
 def run_actor_with_csv(actor_name: str, csv_data: str, api_key: str = None,
                        store_id: str = None, file_key_name: str = None,
                        batch_size: int = 500, max_concurrency: int = 3,
