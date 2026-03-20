@@ -10,10 +10,7 @@ from datetime import datetime, timedelta
 
 from scraper_tech import search_maps_all_pages, flatten_result
 from clay_webhook import send_to_clay
-from apify_actor import (
-    run_actor_with_csv, upload_to_kv_store,
-    download_from_kv_store, list_kv_store_keys,
-)
+from apify_actor import run_actor_with_csv, upload_to_kv_store
 
 # --- Config ---
 ZIP_CSV = Path(__file__).parent / "us_zip_codes.csv"
@@ -90,30 +87,13 @@ def is_job_stale(job: dict, max_age_minutes: int = 5) -> bool:
         return True
 
 
-# --- Cloud sync: persist CSVs to Apify KV store ---
-def sync_results_from_cloud():
-    """Download any CSVs from Apify KV store that aren't on local disk."""
-    remote_keys = list_kv_store_keys(prefix="gmaps")
-    local_files = {f.name for f in RESULTS_DIR.glob("*.csv")}
-    downloaded = 0
-
-    for key in remote_keys:
-        if key not in local_files:
-            csv_data = download_from_kv_store(key)
-            if csv_data:
-                (RESULTS_DIR / key).write_text(csv_data)
-                downloaded += 1
-
-    return downloaded
-
-
 def upload_result_to_cloud(filepath: Path):
-    """Upload a CSV result to Apify KV store for persistence."""
+    """Upload a CSV result to Apify KV store for backup."""
     try:
         csv_data = filepath.read_text()
         upload_to_kv_store(filepath.name, csv_data)
     except Exception:
-        pass  # Non-critical, don't break the flow
+        pass
 
 
 # --- Password Protection ---
@@ -397,13 +377,136 @@ st.markdown("""
 st.title("🗺️ Google Maps Scraper")
 st.caption("Search for businesses across the United States or Europe")
 
-# --- On startup: sync past results from cloud ---
-if "_cloud_synced" not in st.session_state:
-    with st.spinner("Syncing past results from cloud..."):
-        downloaded = sync_results_from_cloud()
-    if downloaded:
-        st.toast(f"Restored {downloaded} past scrape(s) from cloud")
-    st.session_state["_cloud_synced"] = True
+# --- Sidebar: View Past Results (always rendered) ---
+with st.sidebar:
+    st.header("Past Scrapes")
+    result_files = sorted(RESULTS_DIR.glob("*.csv"), reverse=True)
+    if result_files:
+        selected_file = st.selectbox(
+            "Select a past scrape",
+            result_files,
+            format_func=lambda f: f"{f.name} ({f.stat().st_size/1024:.0f} KB)",
+        )
+
+        if selected_file:
+            past_df = pd.read_csv(selected_file)
+            st.metric("Rows", len(past_df))
+            st.dataframe(past_df, use_container_width=True, height=300)
+
+            st.download_button(
+                "Download CSV",
+                past_df.to_csv(index=False),
+                file_name=selected_file.name,
+                mime="text/csv",
+                use_container_width=True,
+                key="sidebar_download",
+            )
+
+            st.divider()
+            past_clay_url = st.text_input(
+                "Clay Webhook URL",
+                value=os.getenv("CLAY_WEBHOOK_URL", ""),
+                key="sidebar_clay_url",
+            )
+            if st.button("Send to Clay", use_container_width=True, key="sidebar_clay_btn"):
+                if past_clay_url:
+                    past_clay_progress = st.progress(0)
+                    past_clay_status = st.empty()
+
+                    def on_past_clay_progress(current, total, sent, errors):
+                        past_clay_progress.progress(current / total)
+                        past_clay_status.text(f"Row {current}/{total} — Sent: {sent} | Errors: {errors}")
+
+                    try:
+                        result = send_to_clay(
+                            past_df.to_dict("records"),
+                            webhook_url=past_clay_url,
+                            on_progress=on_past_clay_progress,
+                        )
+                        past_clay_progress.progress(1.0)
+                        st.success(f"Sent {result['sent']}/{result['total']} rows. Errors: {result['errors']}")
+                    except Exception as e:
+                        st.error(f"Failed: {e}")
+                else:
+                    st.warning("Enter a Clay webhook URL")
+
+            st.divider()
+            st.markdown("**Apify Actor**")
+
+            sidebar_apify_log = load_apify_log()
+            past_fname = selected_file.name
+            if past_fname in sidebar_apify_log:
+                prev = sidebar_apify_log[past_fname]
+                st.success("Already sent to Apify")
+                st.code(f"Run ID: {prev.get('run_id', '?')}\nSent: {prev.get('sent_at', '?')}")
+                st.markdown(f"[View on Apify](https://console.apify.com/actors/runs/{prev.get('run_id', '')})")
+
+            past_apify_actor = st.text_input(
+                "Actor Name",
+                value=os.getenv("APIFY_ACTOR_NAME", ""),
+                placeholder="e.g., creator-account/csv---webhook",
+                key="sidebar_apify_actor",
+            )
+            past_apify_wait = st.checkbox(
+                "Wait for completion",
+                value=False,
+                key="sidebar_apify_wait",
+            )
+
+            btn_label = "Re-send to Apify" if past_fname in sidebar_apify_log else "Send to Apify"
+            if st.button(btn_label, use_container_width=True, key="sidebar_apify_btn"):
+                if past_apify_actor:
+                    past_apify_progress = st.progress(0)
+                    past_apify_status = st.empty()
+
+                    try:
+                        csv_content = past_df.to_csv(index=False)
+                        past_apify_status.text("Starting Apify actor run...")
+
+                        def on_past_apify_progress(msg):
+                            past_apify_status.text(f"Status: {msg}")
+
+                        max_wait = 300 if past_apify_wait else 0
+                        result = run_actor_with_csv(
+                            past_apify_actor,
+                            csv_content,
+                            file_key_name=past_fname,
+                            poll_interval=5,
+                            max_wait=max_wait,
+                            on_progress=on_past_apify_progress,
+                        )
+
+                        if "error" in result:
+                            past_apify_status.error(f"Error: {result['error']}")
+                        else:
+                            past_apify_progress.progress(1.0)
+                            run_id = result.get("run_id", "unknown")
+                            run_status = result.get("run_status", "")
+                            file_key = result.get("file_key", "")
+
+                            sidebar_apify_log[past_fname] = {
+                                "run_id": run_id,
+                                "file_key": file_key,
+                                "run_status": run_status,
+                                "sent_at": datetime.now().isoformat(),
+                            }
+                            save_apify_log(sidebar_apify_log)
+
+                            if run_status == "SUCCEEDED":
+                                st.success("Actor completed!")
+                            elif run_status == "STARTED":
+                                st.info("Actor running in background.")
+                            else:
+                                past_apify_status.info(f"Status: {run_status}")
+
+                            st.code(f"Run ID: {run_id}\nFile: {file_key}\nStatus: {run_status}")
+                            st.markdown(f"[View on Apify](https://console.apify.com/actors/runs/{run_id})")
+                    except Exception as e:
+                        past_apify_status.error(f"Failed: {e}")
+                else:
+                    st.warning("Enter an Apify actor name")
+    else:
+        st.caption("No scrapes yet. Run a search to get started.")
 
 # --- Check for running/completed job ---
 job = load_job_status()
@@ -789,134 +892,3 @@ if submitted and keyword:
 
 elif submitted and not keyword:
     st.warning("Please enter a search keyword")
-
-# --- Sidebar: View Past Results ---
-with st.sidebar:
-    st.header("Past Scrapes")
-    result_files = sorted(RESULTS_DIR.glob("*.csv"), reverse=True)
-    if result_files:
-        selected_file = st.selectbox(
-            "Select a past scrape",
-            result_files,
-            format_func=lambda f: f"{f.name} ({f.stat().st_size/1024:.0f} KB)",
-        )
-
-        if selected_file:
-            past_df = pd.read_csv(selected_file)
-            st.metric("Rows", len(past_df))
-            st.dataframe(past_df, use_container_width=True, height=300)
-
-            st.download_button(
-                "Download CSV",
-                past_df.to_csv(index=False),
-                file_name=selected_file.name,
-                mime="text/csv",
-                use_container_width=True,
-                key="sidebar_download",
-            )
-
-            st.divider()
-            past_clay_url = st.text_input(
-                "Clay Webhook URL",
-                value=os.getenv("CLAY_WEBHOOK_URL", ""),
-                key="sidebar_clay_url",
-            )
-            if st.button("Send to Clay", use_container_width=True, key="sidebar_clay_btn"):
-                if past_clay_url:
-                    past_clay_progress = st.progress(0)
-                    past_clay_status = st.empty()
-
-                    def on_past_clay_progress(current, total, sent, errors):
-                        past_clay_progress.progress(current / total)
-                        past_clay_status.text(f"Row {current}/{total} — Sent: {sent} | Errors: {errors}")
-
-                    try:
-                        result = send_to_clay(
-                            past_df.to_dict("records"),
-                            webhook_url=past_clay_url,
-                            on_progress=on_past_clay_progress,
-                        )
-                        past_clay_progress.progress(1.0)
-                        st.success(f"Sent {result['sent']}/{result['total']} rows. Errors: {result['errors']}")
-                    except Exception as e:
-                        st.error(f"Failed: {e}")
-                else:
-                    st.warning("Enter a Clay webhook URL")
-
-            st.divider()
-            st.markdown("**Apify Actor**")
-
-            sidebar_apify_log = load_apify_log()
-            past_fname = selected_file.name
-            if past_fname in sidebar_apify_log:
-                prev = sidebar_apify_log[past_fname]
-                st.success("Already sent to Apify")
-                st.code(f"Run ID: {prev.get('run_id', '?')}\nSent: {prev.get('sent_at', '?')}")
-                st.markdown(f"[View on Apify](https://console.apify.com/actors/runs/{prev.get('run_id', '')})")
-
-            past_apify_actor = st.text_input(
-                "Actor Name",
-                value=os.getenv("APIFY_ACTOR_NAME", ""),
-                placeholder="e.g., creator-account/csv---webhook",
-                key="sidebar_apify_actor",
-            )
-            past_apify_wait = st.checkbox(
-                "Wait for completion",
-                value=False,
-                key="sidebar_apify_wait",
-            )
-
-            btn_label = "Re-send to Apify" if past_fname in sidebar_apify_log else "Send to Apify"
-            if st.button(btn_label, use_container_width=True, key="sidebar_apify_btn"):
-                if past_apify_actor:
-                    past_apify_progress = st.progress(0)
-                    past_apify_status = st.empty()
-
-                    try:
-                        csv_content = past_df.to_csv(index=False)
-                        past_apify_status.text("Starting Apify actor run...")
-
-                        def on_past_apify_progress(msg):
-                            past_apify_status.text(f"Status: {msg}")
-
-                        max_wait = 300 if past_apify_wait else 0
-                        result = run_actor_with_csv(
-                            past_apify_actor,
-                            csv_content,
-                            file_key_name=past_fname,
-                            poll_interval=5,
-                            max_wait=max_wait,
-                            on_progress=on_past_apify_progress,
-                        )
-
-                        if "error" in result:
-                            past_apify_status.error(f"Error: {result['error']}")
-                        else:
-                            past_apify_progress.progress(1.0)
-                            run_id = result.get("run_id", "unknown")
-                            run_status = result.get("run_status", "")
-                            file_key = result.get("file_key", "")
-
-                            sidebar_apify_log[past_fname] = {
-                                "run_id": run_id,
-                                "file_key": file_key,
-                                "run_status": run_status,
-                                "sent_at": datetime.now().isoformat(),
-                            }
-                            save_apify_log(sidebar_apify_log)
-
-                            if run_status == "SUCCEEDED":
-                                st.success("Actor completed!")
-                            elif run_status == "STARTED":
-                                st.info("Actor running in background.")
-                            else:
-                                past_apify_status.info(f"Status: {run_status}")
-
-                            st.code(f"Run ID: {run_id}\nFile: {file_key}\nStatus: {run_status}")
-                            st.markdown(f"[View on Apify](https://console.apify.com/actors/runs/{run_id})")
-                    except Exception as e:
-                        past_apify_status.error(f"Failed: {e}")
-                else:
-                    st.warning("Enter an Apify actor name")
-    else:
-        st.caption("No scrapes yet. Run a search to get started.")
