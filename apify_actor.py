@@ -34,7 +34,7 @@ def upload_to_kv_store(file_key: str, csv_data: str, api_key: str = None,
 
 
 def download_from_kv_store(file_key: str, api_key: str = None,
-                           store_id: str = None) -> str | None:
+                           store_id: str = None) :
     """Download a CSV from the Apify key-value store. Returns CSV string or None."""
     key = api_key or APIFY_API_KEY
     sid = store_id or APIFY_KV_STORE_ID

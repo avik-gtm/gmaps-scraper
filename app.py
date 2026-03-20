@@ -10,7 +10,10 @@ from datetime import datetime, timedelta
 
 from scraper_tech import search_maps_all_pages, flatten_result
 from clay_webhook import send_to_clay
-from apify_actor import run_actor_with_csv, upload_to_kv_store
+from apify_actor import (
+    run_actor_with_csv, upload_to_kv_store,
+    download_from_kv_store, list_kv_store_keys,
+)
 
 # --- Config ---
 ZIP_CSV = Path(__file__).parent / "us_zip_codes.csv"
@@ -61,7 +64,7 @@ def save_job_status(status: dict):
     JOB_STATUS_FILE.write_text(json.dumps(status, indent=2))
 
 
-def load_job_status() -> dict | None:
+def load_job_status():
     if JOB_STATUS_FILE.exists():
         try:
             return json.loads(JOB_STATUS_FILE.read_text())
@@ -87,8 +90,24 @@ def is_job_stale(job: dict, max_age_minutes: int = 5) -> bool:
         return True
 
 
-def upload_result_to_cloud(filepath: Path):
-    """Upload a CSV result to Apify KV store for backup."""
+def sync_results_from_cloud():
+    """Download any CSVs from Apify KV store that aren't on local disk."""
+    remote_keys = list_kv_store_keys(prefix="gmaps")
+    local_files = {f.name for f in RESULTS_DIR.glob("*.csv")}
+    downloaded = 0
+
+    for key in remote_keys:
+        if key not in local_files:
+            csv_data = download_from_kv_store(key)
+            if csv_data:
+                (RESULTS_DIR / key).write_text(csv_data)
+                downloaded += 1
+
+    return downloaded
+
+
+def upload_result_to_cloud(filepath):
+    """Upload a CSV result to Apify KV store for persistence."""
     try:
         csv_data = filepath.read_text()
         upload_to_kv_store(filepath.name, csv_data)
@@ -376,6 +395,14 @@ st.markdown("""
 
 st.title("🗺️ Google Maps Scraper")
 st.caption("Search for businesses across the United States or Europe")
+
+# --- On startup: restore past results from cloud ---
+if "_cloud_synced" not in st.session_state:
+    with st.spinner("Loading past results..."):
+        downloaded = sync_results_from_cloud()
+    if downloaded:
+        st.toast(f"Restored {downloaded} past scrape(s)")
+    st.session_state["_cloud_synced"] = True
 
 # --- Sidebar: View Past Results (always rendered) ---
 with st.sidebar:
