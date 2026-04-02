@@ -1,0 +1,1795 @@
+country,country_code,region,city,postal_code
+Germany,de,Baden-Württemberg,Stuttgart,70173
+Germany,de,Baden-Württemberg,Karlsruhe,76131
+Germany,de,Baden-Württemberg,Mannheim,68159
+Germany,de,Baden-Württemberg,Freiburg,79098
+Germany,de,Baden-Württemberg,Heidelberg,69117
+Germany,de,Baden-Württemberg,Ulm,89073
+Germany,de,Baden-Württemberg,Heilbronn,74072
+Germany,de,Baden-Württemberg,Pforzheim,75172
+Germany,de,Baden-Württemberg,Reutlingen,72764
+Germany,de,Baden-Württemberg,Tübingen,72072
+Germany,de,Baden-Württemberg,Konstanz,78462
+Germany,de,Baden-Württemberg,Esslingen,73728
+Germany,de,Baden-Württemberg,Ludwigsburg,71634
+Germany,de,Baden-Württemberg,Böblingen,71032
+Germany,de,Baden-Württemberg,Sindelfingen,71063
+Germany,de,Baden-Württemberg,Offenburg,77652
+Germany,de,Baden-Württemberg,Ravensburg,88212
+Germany,de,Baden-Württemberg,Friedrichshafen,88045
+Germany,de,Baden-Württemberg,Villingen-Schwenningen,78050
+Germany,de,Baden-Württemberg,Aalen,73430
+Germany,de,Baden-Württemberg,Göppingen,73033
+Germany,de,Baden-Württemberg,Schwäbisch Gmünd,73525
+Germany,de,Baden-Württemberg,Waiblingen,71332
+Germany,de,Baden-Württemberg,Fellbach,70734
+Germany,de,Baden-Württemberg,Leonberg,71229
+Germany,de,Baden-Württemberg,Rastatt,76437
+Germany,de,Baden-Württemberg,Baden-Baden,76530
+Germany,de,Baden-Württemberg,Bruchsal,76646
+Germany,de,Baden-Württemberg,Schwäbisch Hall,74523
+Germany,de,Baden-Württemberg,Heidenheim,89518
+Germany,de,Bayern,München,80331
+Germany,de,Bayern,Nürnberg,90402
+Germany,de,Bayern,Augsburg,86150
+Germany,de,Bayern,Regensburg,93047
+Germany,de,Bayern,Würzburg,97070
+Germany,de,Bayern,Ingolstadt,85049
+Germany,de,Bayern,Fürth,90762
+Germany,de,Bayern,Erlangen,91052
+Germany,de,Bayern,Bamberg,96047
+Germany,de,Bayern,Bayreuth,95444
+Germany,de,Bayern,Passau,94032
+Germany,de,Bayern,Landshut,84028
+Germany,de,Bayern,Rosenheim,83022
+Germany,de,Bayern,Kempten,87435
+Germany,de,Bayern,Aschaffenburg,63739
+Germany,de,Bayern,Schweinfurt,97421
+Germany,de,Bayern,Neu-Ulm,89231
+Germany,de,Bayern,Straubing,94315
+Germany,de,Bayern,Freising,85354
+Germany,de,Bayern,Coburg,96450
+Germany,de,Bayern,Deggendorf,94469
+Germany,de,Bayern,Kaufbeuren,87600
+Germany,de,Bayern,Memmingen,87700
+Germany,de,Bayern,Hof,95028
+Germany,de,Bayern,Amberg,92224
+Germany,de,Bayern,Weiden,92637
+Germany,de,Bayern,Ansbach,91522
+Germany,de,Bayern,Dachau,85221
+Germany,de,Bayern,Erding,85435
+Germany,de,Bayern,Starnberg,82319
+Germany,de,Berlin,Berlin Mitte,10115
+Germany,de,Berlin,Berlin Kreuzberg,10965
+Germany,de,Berlin,Berlin Charlottenburg,10585
+Germany,de,Berlin,Berlin Neukölln,12043
+Germany,de,Berlin,Berlin Spandau,13597
+Germany,de,Berlin,Berlin Steglitz,12163
+Germany,de,Berlin,Berlin Tempelhof,12099
+Germany,de,Berlin,Berlin Pankow,13187
+Germany,de,Berlin,Berlin Lichtenberg,10315
+Germany,de,Berlin,Berlin Reinickendorf,13403
+Germany,de,Berlin,Berlin Treptow,12435
+Germany,de,Berlin,Berlin Köpenick,12555
+Germany,de,Berlin,Berlin Marzahn,12679
+Germany,de,Berlin,Berlin Hellersdorf,12619
+Germany,de,Berlin,Berlin Prenzlauer Berg,10405
+Germany,de,Berlin,Berlin Friedrichshain,10243
+Germany,de,Berlin,Berlin Wedding,13347
+Germany,de,Berlin,Berlin Schöneberg,10823
+Germany,de,Berlin,Berlin Wilmersdorf,10707
+Germany,de,Berlin,Berlin Zehlendorf,14163
+Germany,de,Brandenburg,Potsdam,14467
+Germany,de,Brandenburg,Cottbus,03042
+Germany,de,Brandenburg,Brandenburg an der Havel,14770
+Germany,de,Brandenburg,Frankfurt (Oder),15230
+Germany,de,Brandenburg,Oranienburg,16515
+Germany,de,Brandenburg,Eberswalde,16225
+Germany,de,Brandenburg,Bernau,16321
+Germany,de,Brandenburg,Königs Wusterhausen,15711
+Germany,de,Brandenburg,Falkensee,14612
+Germany,de,Brandenburg,Luckenwalde,14943
+Germany,de,Brandenburg,Senftenberg,01968
+Germany,de,Brandenburg,Neuruppin,16816
+Germany,de,Brandenburg,Schwedt,16303
+Germany,de,Brandenburg,Strausberg,15344
+Germany,de,Brandenburg,Fürstenwalde,15517
+Germany,de,Brandenburg,Ludwigsfelde,14974
+Germany,de,Bremen,Bremen,28195
+Germany,de,Bremen,Bremerhaven,27568
+Germany,de,Hamburg,Hamburg Mitte,20095
+Germany,de,Hamburg,Hamburg Altona,22765
+Germany,de,Hamburg,Hamburg Eimsbüttel,20253
+Germany,de,Hamburg,Hamburg Nord,22297
+Germany,de,Hamburg,Hamburg Wandsbek,22041
+Germany,de,Hamburg,Hamburg Bergedorf,21029
+Germany,de,Hamburg,Hamburg Harburg,21073
+Germany,de,Hamburg,Hamburg Barmbek,22081
+Germany,de,Hamburg,Hamburg Winterhude,22299
+Germany,de,Hamburg,Hamburg Blankenese,22587
+Germany,de,Hessen,Frankfurt am Main,60311
+Germany,de,Hessen,Wiesbaden,65183
+Germany,de,Hessen,Kassel,34117
+Germany,de,Hessen,Darmstadt,64283
+Germany,de,Hessen,Offenbach,63065
+Germany,de,Hessen,Hanau,63450
+Germany,de,Hessen,Marburg,35037
+Germany,de,Hessen,Gießen,35390
+Germany,de,Hessen,Fulda,36037
+Germany,de,Hessen,Rüsselsheim,65428
+Germany,de,Hessen,Bad Homburg,61348
+Germany,de,Hessen,Wetzlar,35578
+Germany,de,Hessen,Oberursel,61440
+Germany,de,Hessen,Bensheim,64625
+Germany,de,Hessen,Limburg,65549
+Germany,de,Hessen,Friedberg,61169
+Germany,de,Hessen,Langen,63225
+Germany,de,Hessen,Rodgau,63110
+Germany,de,Hessen,Viernheim,68519
+Germany,de,Hessen,Dietzenbach,63128
+Germany,de,Mecklenburg-Vorpommern,Rostock,18055
+Germany,de,Mecklenburg-Vorpommern,Schwerin,19053
+Germany,de,Mecklenburg-Vorpommern,Neubrandenburg,17033
+Germany,de,Mecklenburg-Vorpommern,Stralsund,18435
+Germany,de,Mecklenburg-Vorpommern,Greifswald,17489
+Germany,de,Mecklenburg-Vorpommern,Wismar,23966
+Germany,de,Mecklenburg-Vorpommern,Güstrow,18273
+Germany,de,Mecklenburg-Vorpommern,Waren,17192
+Germany,de,Mecklenburg-Vorpommern,Parchim,19370
+Germany,de,Mecklenburg-Vorpommern,Ribnitz-Damgarten,18311
+Germany,de,Mecklenburg-Vorpommern,Anklam,17389
+Germany,de,Mecklenburg-Vorpommern,Bergen,18528
+Germany,de,Niedersachsen,Hannover,30159
+Germany,de,Niedersachsen,Braunschweig,38100
+Germany,de,Niedersachsen,Osnabrück,49074
+Germany,de,Niedersachsen,Oldenburg,26122
+Germany,de,Niedersachsen,Göttingen,37073
+Germany,de,Niedersachsen,Wolfsburg,38440
+Germany,de,Niedersachsen,Salzgitter,38226
+Germany,de,Niedersachsen,Hildesheim,31134
+Germany,de,Niedersachsen,Wilhelmshaven,26382
+Germany,de,Niedersachsen,Lüneburg,21335
+Germany,de,Niedersachsen,Celle,29221
+Germany,de,Niedersachsen,Delmenhorst,27749
+Germany,de,Niedersachsen,Emden,26721
+Germany,de,Niedersachsen,Hameln,31785
+Germany,de,Niedersachsen,Lingen,49808
+Germany,de,Niedersachsen,Nordhorn,48527
+Germany,de,Niedersachsen,Cuxhaven,27472
+Germany,de,Niedersachsen,Goslar,38640
+Germany,de,Niedersachsen,Peine,31224
+Germany,de,Niedersachsen,Stade,21682
+Germany,de,Niedersachsen,Aurich,26603
+Germany,de,Niedersachsen,Leer,26789
+Germany,de,Niedersachsen,Helmstedt,38350
+Germany,de,Niedersachsen,Cloppenburg,49661
+Germany,de,Niedersachsen,Verden,27283
+Germany,de,Niedersachsen,Nienburg,31582
+Germany,de,Niedersachsen,Gifhorn,38518
+Germany,de,Niedersachsen,Uelzen,29525
+Germany,de,Niedersachsen,Wunstorf,31515
+Germany,de,Niedersachsen,Buchholz,21244
+Germany,de,Nordrhein-Westfalen,Köln,50667
+Germany,de,Nordrhein-Westfalen,Düsseldorf,40210
+Germany,de,Nordrhein-Westfalen,Dortmund,44135
+Germany,de,Nordrhein-Westfalen,Essen,45127
+Germany,de,Nordrhein-Westfalen,Duisburg,47051
+Germany,de,Nordrhein-Westfalen,Bochum,44787
+Germany,de,Nordrhein-Westfalen,Wuppertal,42103
+Germany,de,Nordrhein-Westfalen,Bielefeld,33602
+Germany,de,Nordrhein-Westfalen,Bonn,53111
+Germany,de,Nordrhein-Westfalen,Münster,48143
+Germany,de,Nordrhein-Westfalen,Gelsenkirchen,45879
+Germany,de,Nordrhein-Westfalen,Mönchengladbach,41061
+Germany,de,Nordrhein-Westfalen,Aachen,52062
+Germany,de,Nordrhein-Westfalen,Krefeld,47798
+Germany,de,Nordrhein-Westfalen,Oberhausen,46045
+Germany,de,Nordrhein-Westfalen,Hagen,58095
+Germany,de,Nordrhein-Westfalen,Hamm,59065
+Germany,de,Nordrhein-Westfalen,Mülheim,45468
+Germany,de,Nordrhein-Westfalen,Leverkusen,51373
+Germany,de,Nordrhein-Westfalen,Solingen,42651
+Germany,de,Nordrhein-Westfalen,Herne,44623
+Germany,de,Nordrhein-Westfalen,Paderborn,33098
+Germany,de,Nordrhein-Westfalen,Neuss,41460
+Germany,de,Nordrhein-Westfalen,Recklinghausen,45657
+Germany,de,Nordrhein-Westfalen,Bottrop,46236
+Germany,de,Nordrhein-Westfalen,Remscheid,42853
+Germany,de,Nordrhein-Westfalen,Siegen,57072
+Germany,de,Nordrhein-Westfalen,Moers,47441
+Germany,de,Nordrhein-Westfalen,Bergisch Gladbach,51465
+Germany,de,Nordrhein-Westfalen,Gütersloh,33330
+Germany,de,Nordrhein-Westfalen,Iserlohn,58636
+Germany,de,Nordrhein-Westfalen,Marl,45768
+Germany,de,Nordrhein-Westfalen,Lünen,44532
+Germany,de,Nordrhein-Westfalen,Witten,58452
+Germany,de,Nordrhein-Westfalen,Detmold,32756
+Germany,de,Nordrhein-Westfalen,Minden,32423
+Germany,de,Nordrhein-Westfalen,Troisdorf,53840
+Germany,de,Nordrhein-Westfalen,Dorsten,46282
+Germany,de,Nordrhein-Westfalen,Herford,32049
+Germany,de,Nordrhein-Westfalen,Ratingen,40878
+Germany,de,Rheinland-Pfalz,Mainz,55116
+Germany,de,Rheinland-Pfalz,Ludwigshafen,67059
+Germany,de,Rheinland-Pfalz,Koblenz,56068
+Germany,de,Rheinland-Pfalz,Trier,54290
+Germany,de,Rheinland-Pfalz,Kaiserslautern,67655
+Germany,de,Rheinland-Pfalz,Worms,67547
+Germany,de,Rheinland-Pfalz,Neustadt,67433
+Germany,de,Rheinland-Pfalz,Speyer,67346
+Germany,de,Rheinland-Pfalz,Bad Kreuznach,55543
+Germany,de,Rheinland-Pfalz,Landau,76829
+Germany,de,Rheinland-Pfalz,Pirmasens,66953
+Germany,de,Rheinland-Pfalz,Zweibrücken,66482
+Germany,de,Rheinland-Pfalz,Neuwied,56564
+Germany,de,Rheinland-Pfalz,Andernach,56626
+Germany,de,Rheinland-Pfalz,Idar-Oberstein,55743
+Germany,de,Rheinland-Pfalz,Frankenthal,67227
+Germany,de,Rheinland-Pfalz,Bingen,55411
+Germany,de,Rheinland-Pfalz,Ingelheim,55218
+Germany,de,Saarland,Saarbrücken,66111
+Germany,de,Saarland,Neunkirchen,66538
+Germany,de,Saarland,Homburg,66424
+Germany,de,Saarland,Völklingen,66333
+Germany,de,Saarland,Sankt Ingbert,66386
+Germany,de,Saarland,Saarlouis,66740
+Germany,de,Saarland,Merzig,66663
+Germany,de,Saarland,Sankt Wendel,66606
+Germany,de,Saarland,Dillingen,66763
+Germany,de,Sachsen,Leipzig,04103
+Germany,de,Sachsen,Dresden,01067
+Germany,de,Sachsen,Chemnitz,09111
+Germany,de,Sachsen,Zwickau,08056
+Germany,de,Sachsen,Plauen,08523
+Germany,de,Sachsen,Görlitz,02826
+Germany,de,Sachsen,Freiberg,09599
+Germany,de,Sachsen,Bautzen,02625
+Germany,de,Sachsen,Pirna,01796
+Germany,de,Sachsen,Meißen,01662
+Germany,de,Sachsen,Döbeln,04720
+Germany,de,Sachsen,Riesa,01587
+Germany,de,Sachsen,Hoyerswerda,02977
+Germany,de,Sachsen,Delitzsch,04509
+Germany,de,Sachsen,Radebeul,01445
+Germany,de,Sachsen,Markkleeberg,04416
+Germany,de,Sachsen,Limbach-Oberfrohna,09212
+Germany,de,Sachsen-Anhalt,Halle,06108
+Germany,de,Sachsen-Anhalt,Magdeburg,39104
+Germany,de,Sachsen-Anhalt,Dessau-Roßlau,06844
+Germany,de,Sachsen-Anhalt,Wittenberg,06886
+Germany,de,Sachsen-Anhalt,Halberstadt,38820
+Germany,de,Sachsen-Anhalt,Stendal,39576
+Germany,de,Sachsen-Anhalt,Merseburg,06217
+Germany,de,Sachsen-Anhalt,Wernigerode,38855
+Germany,de,Sachsen-Anhalt,Naumburg,06618
+Germany,de,Sachsen-Anhalt,Quedlinburg,06484
+Germany,de,Sachsen-Anhalt,Bernburg,06406
+Germany,de,Sachsen-Anhalt,Aschersleben,06449
+Germany,de,Sachsen-Anhalt,Schönebeck,39218
+Germany,de,Sachsen-Anhalt,Weißenfels,06667
+Germany,de,Sachsen-Anhalt,Sangerhausen,06526
+Germany,de,Schleswig-Holstein,Kiel,24103
+Germany,de,Schleswig-Holstein,Lübeck,23552
+Germany,de,Schleswig-Holstein,Flensburg,24937
+Germany,de,Schleswig-Holstein,Neumünster,24534
+Germany,de,Schleswig-Holstein,Norderstedt,22844
+Germany,de,Schleswig-Holstein,Elmshorn,25335
+Germany,de,Schleswig-Holstein,Pinneberg,25421
+Germany,de,Schleswig-Holstein,Itzehoe,25524
+Germany,de,Schleswig-Holstein,Wedel,22880
+Germany,de,Schleswig-Holstein,Ahrensburg,22926
+Germany,de,Schleswig-Holstein,Rendsburg,24768
+Germany,de,Schleswig-Holstein,Husum,25813
+Germany,de,Schleswig-Holstein,Geesthacht,21502
+Germany,de,Schleswig-Holstein,Henstedt-Ulzburg,24558
+Germany,de,Schleswig-Holstein,Bad Oldesloe,23843
+Germany,de,Schleswig-Holstein,Eutin,23701
+Germany,de,Schleswig-Holstein,Heide,25746
+Germany,de,Thüringen,Erfurt,99084
+Germany,de,Thüringen,Jena,07743
+Germany,de,Thüringen,Gera,07545
+Germany,de,Thüringen,Weimar,99423
+Germany,de,Thüringen,Gotha,99867
+Germany,de,Thüringen,Nordhausen,99734
+Germany,de,Thüringen,Eisenach,99817
+Germany,de,Thüringen,Suhl,98527
+Germany,de,Thüringen,Altenburg,04600
+Germany,de,Thüringen,Mühlhausen,99974
+Germany,de,Thüringen,Ilmenau,98693
+Germany,de,Thüringen,Arnstadt,99310
+Germany,de,Thüringen,Saalfeld,07318
+Germany,de,Thüringen,Rudolstadt,07407
+Germany,de,Thüringen,Sonneberg,96515
+Germany,de,Thüringen,Meiningen,98617
+Germany,de,Thüringen,Apolda,99510
+Germany,de,Thüringen,Sondershausen,99706
+United Kingdom,gb,England - London,City of London,EC1A
+United Kingdom,gb,England - London,Westminster,SW1A
+United Kingdom,gb,England - London,Camden,NW1
+United Kingdom,gb,England - London,Islington,N1
+United Kingdom,gb,England - London,Hackney,E8
+United Kingdom,gb,England - London,Tower Hamlets,E1
+United Kingdom,gb,England - London,Southwark,SE1
+United Kingdom,gb,England - London,Lambeth,SW2
+United Kingdom,gb,England - London,Wandsworth,SW18
+United Kingdom,gb,England - London,Greenwich,SE10
+United Kingdom,gb,England - London,Lewisham,SE13
+United Kingdom,gb,England - London,Bromley,BR1
+United Kingdom,gb,England - London,Croydon,CR0
+United Kingdom,gb,England - London,Barnet,EN5
+United Kingdom,gb,England - London,Ealing,W5
+United Kingdom,gb,England - London,Hounslow,TW3
+United Kingdom,gb,England - London,Richmond,TW9
+United Kingdom,gb,England - London,Kingston,KT1
+United Kingdom,gb,England - London,Hammersmith,W6
+United Kingdom,gb,England - London,Kensington,W8
+United Kingdom,gb,England - South East,Brighton,BN1
+United Kingdom,gb,England - South East,Southampton,SO14
+United Kingdom,gb,England - South East,Portsmouth,PO1
+United Kingdom,gb,England - South East,Oxford,OX1
+United Kingdom,gb,England - South East,Reading,RG1
+United Kingdom,gb,England - South East,Milton Keynes,MK9
+United Kingdom,gb,England - South East,Canterbury,CT1
+United Kingdom,gb,England - South East,Guildford,GU1
+United Kingdom,gb,England - South East,Maidstone,ME14
+United Kingdom,gb,England - South East,Crawley,RH10
+United Kingdom,gb,England - South East,Slough,SL1
+United Kingdom,gb,England - South East,Hastings,TN34
+United Kingdom,gb,England - South East,Chichester,PO19
+United Kingdom,gb,England - South East,Winchester,SO23
+United Kingdom,gb,England - South East,Basingstoke,RG21
+United Kingdom,gb,England - South East,Tunbridge Wells,TN1
+United Kingdom,gb,England - South East,Aylesbury,HP20
+United Kingdom,gb,England - South East,High Wycombe,HP11
+United Kingdom,gb,England - South East,Eastbourne,BN21
+United Kingdom,gb,England - South East,Woking,GU21
+United Kingdom,gb,England - South West,Bristol,BS1
+United Kingdom,gb,England - South West,Plymouth,PL1
+United Kingdom,gb,England - South West,Exeter,EX1
+United Kingdom,gb,England - South West,Bath,BA1
+United Kingdom,gb,England - South West,Cheltenham,GL50
+United Kingdom,gb,England - South West,Gloucester,GL1
+United Kingdom,gb,England - South West,Swindon,SN1
+United Kingdom,gb,England - South West,Bournemouth,BH1
+United Kingdom,gb,England - South West,Poole,BH15
+United Kingdom,gb,England - South West,Taunton,TA1
+United Kingdom,gb,England - South West,Salisbury,SP1
+United Kingdom,gb,England - South West,Torquay,TQ1
+United Kingdom,gb,England - South West,Truro,TR1
+United Kingdom,gb,England - South West,Barnstaple,EX31
+United Kingdom,gb,England - South West,Yeovil,BA20
+United Kingdom,gb,England - South West,Dorchester,DT1
+United Kingdom,gb,England - South West,Weston-super-Mare,BS23
+United Kingdom,gb,England - West Midlands,Birmingham,B1
+United Kingdom,gb,England - West Midlands,Coventry,CV1
+United Kingdom,gb,England - West Midlands,Wolverhampton,WV1
+United Kingdom,gb,England - West Midlands,Stoke-on-Trent,ST1
+United Kingdom,gb,England - West Midlands,Solihull,B91
+United Kingdom,gb,England - West Midlands,Walsall,WS1
+United Kingdom,gb,England - West Midlands,Dudley,DY1
+United Kingdom,gb,England - West Midlands,Worcester,WR1
+United Kingdom,gb,England - West Midlands,Hereford,HR1
+United Kingdom,gb,England - West Midlands,Shrewsbury,SY1
+United Kingdom,gb,England - West Midlands,Telford,TF1
+United Kingdom,gb,England - West Midlands,Stafford,ST16
+United Kingdom,gb,England - West Midlands,Nuneaton,CV11
+United Kingdom,gb,England - West Midlands,Leamington Spa,CV31
+United Kingdom,gb,England - West Midlands,Tamworth,B79
+United Kingdom,gb,England - West Midlands,Redditch,B97
+United Kingdom,gb,England - West Midlands,Kidderminster,DY10
+United Kingdom,gb,England - West Midlands,Burton upon Trent,DE14
+United Kingdom,gb,England - East Midlands,Nottingham,NG1
+United Kingdom,gb,England - East Midlands,Leicester,LE1
+United Kingdom,gb,England - East Midlands,Derby,DE1
+United Kingdom,gb,England - East Midlands,Northampton,NN1
+United Kingdom,gb,England - East Midlands,Lincoln,LN1
+United Kingdom,gb,England - East Midlands,Mansfield,NG18
+United Kingdom,gb,England - East Midlands,Chesterfield,S40
+United Kingdom,gb,England - East Midlands,Loughborough,LE11
+United Kingdom,gb,England - East Midlands,Kettering,NN16
+United Kingdom,gb,England - East Midlands,Corby,NN17
+United Kingdom,gb,England - East Midlands,Wellingborough,NN8
+United Kingdom,gb,England - East Midlands,Boston,PE21
+United Kingdom,gb,England - East Midlands,Grantham,NG31
+United Kingdom,gb,England - East Midlands,Newark,NG24
+United Kingdom,gb,England - East Midlands,Hinckley,LE10
+United Kingdom,gb,England - East,Norwich,NR1
+United Kingdom,gb,England - East,Cambridge,CB1
+United Kingdom,gb,England - East,Ipswich,IP1
+United Kingdom,gb,England - East,Peterborough,PE1
+United Kingdom,gb,England - East,Luton,LU1
+United Kingdom,gb,England - East,Colchester,CO1
+United Kingdom,gb,England - East,Chelmsford,CM1
+United Kingdom,gb,England - East,Southend,SS1
+United Kingdom,gb,England - East,Basildon,SS14
+United Kingdom,gb,England - East,Harlow,CM20
+United Kingdom,gb,England - East,Stevenage,SG1
+United Kingdom,gb,England - East,Watford,WD17
+United Kingdom,gb,England - East,St Albans,AL1
+United Kingdom,gb,England - East,Bedford,MK40
+United Kingdom,gb,England - East,Bury St Edmunds,IP33
+United Kingdom,gb,England - East,Great Yarmouth,NR30
+United Kingdom,gb,England - East,Kings Lynn,PE30
+United Kingdom,gb,England - North West,Manchester,M1
+United Kingdom,gb,England - North West,Liverpool,L1
+United Kingdom,gb,England - North West,Preston,PR1
+United Kingdom,gb,England - North West,Blackpool,FY1
+United Kingdom,gb,England - North West,Bolton,BL1
+United Kingdom,gb,England - North West,Wigan,WN1
+United Kingdom,gb,England - North West,Stockport,SK1
+United Kingdom,gb,England - North West,Warrington,WA1
+United Kingdom,gb,England - North West,Chester,CH1
+United Kingdom,gb,England - North West,Blackburn,BB1
+United Kingdom,gb,England - North West,Burnley,BB11
+United Kingdom,gb,England - North West,Lancaster,LA1
+United Kingdom,gb,England - North West,Oldham,OL1
+United Kingdom,gb,England - North West,Rochdale,OL16
+United Kingdom,gb,England - North West,Salford,M5
+United Kingdom,gb,England - North West,Carlisle,CA1
+United Kingdom,gb,England - North West,Barrow-in-Furness,LA14
+United Kingdom,gb,England - North West,Crewe,CW1
+United Kingdom,gb,England - North West,Macclesfield,SK10
+United Kingdom,gb,England - North West,St Helens,WA10
+United Kingdom,gb,England - North East,Newcastle,NE1
+United Kingdom,gb,England - North East,Sunderland,SR1
+United Kingdom,gb,England - North East,Middlesbrough,TS1
+United Kingdom,gb,England - North East,Durham,DH1
+United Kingdom,gb,England - North East,Darlington,DL1
+United Kingdom,gb,England - North East,Hartlepool,TS24
+United Kingdom,gb,England - North East,Gateshead,NE8
+United Kingdom,gb,England - North East,South Shields,NE33
+United Kingdom,gb,England - North East,Stockton,TS18
+United Kingdom,gb,England - North East,Redcar,TS10
+United Kingdom,gb,England - North East,Bishop Auckland,DL14
+United Kingdom,gb,England - North East,Consett,DH8
+United Kingdom,gb,England - Yorkshire,Leeds,LS1
+United Kingdom,gb,England - Yorkshire,Sheffield,S1
+United Kingdom,gb,England - Yorkshire,Bradford,BD1
+United Kingdom,gb,England - Yorkshire,Hull,HU1
+United Kingdom,gb,England - Yorkshire,York,YO1
+United Kingdom,gb,England - Yorkshire,Wakefield,WF1
+United Kingdom,gb,England - Yorkshire,Huddersfield,HD1
+United Kingdom,gb,England - Yorkshire,Doncaster,DN1
+United Kingdom,gb,England - Yorkshire,Rotherham,S60
+United Kingdom,gb,England - Yorkshire,Barnsley,S70
+United Kingdom,gb,England - Yorkshire,Scarborough,YO11
+United Kingdom,gb,England - Yorkshire,Harrogate,HG1
+United Kingdom,gb,England - Yorkshire,Halifax,HX1
+United Kingdom,gb,England - Yorkshire,Grimsby,DN31
+United Kingdom,gb,England - Yorkshire,Scunthorpe,DN15
+United Kingdom,gb,England - Yorkshire,Dewsbury,WF12
+United Kingdom,gb,England - Yorkshire,Skipton,BD23
+United Kingdom,gb,England - Yorkshire,Selby,YO8
+United Kingdom,gb,Scotland,Edinburgh,EH1
+United Kingdom,gb,Scotland,Glasgow,G1
+United Kingdom,gb,Scotland,Aberdeen,AB10
+United Kingdom,gb,Scotland,Dundee,DD1
+United Kingdom,gb,Scotland,Inverness,IV1
+United Kingdom,gb,Scotland,Stirling,FK8
+United Kingdom,gb,Scotland,Perth,PH1
+United Kingdom,gb,Scotland,Paisley,PA1
+United Kingdom,gb,Scotland,Ayr,KA7
+United Kingdom,gb,Scotland,Kilmarnock,KA1
+United Kingdom,gb,Scotland,Dunfermline,KY12
+United Kingdom,gb,Scotland,Falkirk,FK1
+United Kingdom,gb,Scotland,Livingston,EH54
+United Kingdom,gb,Scotland,East Kilbride,G74
+United Kingdom,gb,Scotland,Hamilton,ML3
+United Kingdom,gb,Scotland,Dumfries,DG1
+United Kingdom,gb,Scotland,Kirkcaldy,KY1
+United Kingdom,gb,Scotland,Greenock,PA15
+United Kingdom,gb,Wales,Cardiff,CF10
+United Kingdom,gb,Wales,Swansea,SA1
+United Kingdom,gb,Wales,Newport,NP20
+United Kingdom,gb,Wales,Wrexham,LL11
+United Kingdom,gb,Wales,Barry,CF62
+United Kingdom,gb,Wales,Bridgend,CF31
+United Kingdom,gb,Wales,Llanelli,SA15
+United Kingdom,gb,Wales,Neath,SA11
+United Kingdom,gb,Wales,Pontypridd,CF37
+United Kingdom,gb,Wales,Merthyr Tydfil,CF47
+United Kingdom,gb,Wales,Caernarfon,LL55
+United Kingdom,gb,Wales,Bangor,LL57
+United Kingdom,gb,Wales,Aberystwyth,SY23
+United Kingdom,gb,Wales,Carmarthen,SA31
+United Kingdom,gb,Wales,Haverfordwest,SA61
+United Kingdom,gb,Northern Ireland,Belfast,BT1
+United Kingdom,gb,Northern Ireland,Derry,BT48
+United Kingdom,gb,Northern Ireland,Lisburn,BT28
+United Kingdom,gb,Northern Ireland,Newry,BT34
+United Kingdom,gb,Northern Ireland,Bangor,BT19
+United Kingdom,gb,Northern Ireland,Craigavon,BT65
+United Kingdom,gb,Northern Ireland,Ballymena,BT42
+United Kingdom,gb,Northern Ireland,Newtownabbey,BT36
+United Kingdom,gb,Northern Ireland,Omagh,BT78
+United Kingdom,gb,Northern Ireland,Coleraine,BT52
+United Kingdom,gb,Northern Ireland,Enniskillen,BT74
+United Kingdom,gb,Northern Ireland,Carrickfergus,BT38
+France,fr,Île-de-France,Paris,75001
+France,fr,Île-de-France,Boulogne-Billancourt,92100
+France,fr,Île-de-France,Saint-Denis,93200
+France,fr,Île-de-France,Montreuil,93100
+France,fr,Île-de-France,Argenteuil,95100
+France,fr,Île-de-France,Nanterre,92000
+France,fr,Île-de-France,Créteil,94000
+France,fr,Île-de-France,Versailles,78000
+France,fr,Île-de-France,Évry,91000
+France,fr,Île-de-France,Colombes,92700
+France,fr,Île-de-France,Cergy,95000
+France,fr,Île-de-France,Meaux,77100
+France,fr,Île-de-France,Melun,77000
+France,fr,Île-de-France,Fontainebleau,77300
+France,fr,Île-de-France,Saint-Germain-en-Laye,78100
+France,fr,Île-de-France,Massy,91300
+France,fr,Auvergne-Rhône-Alpes,Lyon,69001
+France,fr,Auvergne-Rhône-Alpes,Grenoble,38000
+France,fr,Auvergne-Rhône-Alpes,Saint-Étienne,42000
+France,fr,Auvergne-Rhône-Alpes,Clermont-Ferrand,63000
+France,fr,Auvergne-Rhône-Alpes,Villeurbanne,69100
+France,fr,Auvergne-Rhône-Alpes,Annecy,74000
+France,fr,Auvergne-Rhône-Alpes,Valence,26000
+France,fr,Auvergne-Rhône-Alpes,Chambéry,73000
+France,fr,Auvergne-Rhône-Alpes,Bourg-en-Bresse,01000
+France,fr,Auvergne-Rhône-Alpes,Roanne,42300
+France,fr,Auvergne-Rhône-Alpes,Aurillac,15000
+France,fr,Auvergne-Rhône-Alpes,Le Puy-en-Velay,43000
+France,fr,Auvergne-Rhône-Alpes,Montélimar,26200
+France,fr,Auvergne-Rhône-Alpes,Vienne,38200
+France,fr,Auvergne-Rhône-Alpes,Thonon-les-Bains,74200
+France,fr,Nouvelle-Aquitaine,Bordeaux,33000
+France,fr,Nouvelle-Aquitaine,Limoges,87000
+France,fr,Nouvelle-Aquitaine,Poitiers,86000
+France,fr,Nouvelle-Aquitaine,La Rochelle,17000
+France,fr,Nouvelle-Aquitaine,Pau,64000
+France,fr,Nouvelle-Aquitaine,Bayonne,64100
+France,fr,Nouvelle-Aquitaine,Angoulême,16000
+France,fr,Nouvelle-Aquitaine,Brive-la-Gaillarde,19100
+France,fr,Nouvelle-Aquitaine,Niort,79000
+France,fr,Nouvelle-Aquitaine,Agen,47000
+France,fr,Nouvelle-Aquitaine,Périgueux,24000
+France,fr,Nouvelle-Aquitaine,Mont-de-Marsan,40000
+France,fr,Nouvelle-Aquitaine,Châtellerault,86100
+France,fr,Nouvelle-Aquitaine,Bergerac,24100
+France,fr,Nouvelle-Aquitaine,Saintes,17100
+France,fr,Occitanie,Toulouse,31000
+France,fr,Occitanie,Montpellier,34000
+France,fr,Occitanie,Nîmes,30000
+France,fr,Occitanie,Perpignan,66000
+France,fr,Occitanie,Béziers,34500
+France,fr,Occitanie,Albi,81000
+France,fr,Occitanie,Carcassonne,11000
+France,fr,Occitanie,Tarbes,65000
+France,fr,Occitanie,Auch,32000
+France,fr,Occitanie,Rodez,12000
+France,fr,Occitanie,Cahors,46000
+France,fr,Occitanie,Narbonne,11100
+France,fr,Occitanie,Castres,81100
+France,fr,Occitanie,Sète,34200
+France,fr,Occitanie,Mende,48000
+France,fr,Provence-Alpes-Côte d'Azur,Marseille,13001
+France,fr,Provence-Alpes-Côte d'Azur,Nice,06000
+France,fr,Provence-Alpes-Côte d'Azur,Toulon,83000
+France,fr,Provence-Alpes-Côte d'Azur,Aix-en-Provence,13100
+France,fr,Provence-Alpes-Côte d'Azur,Avignon,84000
+France,fr,Provence-Alpes-Côte d'Azur,Cannes,06400
+France,fr,Provence-Alpes-Côte d'Azur,Antibes,06600
+France,fr,Provence-Alpes-Côte d'Azur,Fréjus,83600
+France,fr,Provence-Alpes-Côte d'Azur,Gap,05000
+France,fr,Provence-Alpes-Côte d'Azur,Arles,13200
+France,fr,Provence-Alpes-Côte d'Azur,Digne-les-Bains,04000
+France,fr,Provence-Alpes-Côte d'Azur,Salon-de-Provence,13300
+France,fr,Provence-Alpes-Côte d'Azur,Hyères,83400
+France,fr,Provence-Alpes-Côte d'Azur,La Seyne-sur-Mer,83500
+France,fr,Provence-Alpes-Côte d'Azur,Grasse,06130
+France,fr,Grand Est,Strasbourg,67000
+France,fr,Grand Est,Reims,51100
+France,fr,Grand Est,Metz,57000
+France,fr,Grand Est,Nancy,54000
+France,fr,Grand Est,Mulhouse,68100
+France,fr,Grand Est,Troyes,10000
+France,fr,Grand Est,Colmar,68000
+France,fr,Grand Est,Charleville-Mézières,08000
+France,fr,Grand Est,Épinal,88000
+France,fr,Grand Est,Châlons-en-Champagne,51000
+France,fr,Grand Est,Haguenau,67500
+France,fr,Grand Est,Thionville,57100
+France,fr,Grand Est,Bar-le-Duc,55000
+France,fr,Hauts-de-France,Lille,59000
+France,fr,Hauts-de-France,Amiens,80000
+France,fr,Hauts-de-France,Roubaix,59100
+France,fr,Hauts-de-France,Tourcoing,59200
+France,fr,Hauts-de-France,Dunkerque,59140
+France,fr,Hauts-de-France,Calais,62100
+France,fr,Hauts-de-France,Boulogne-sur-Mer,62200
+France,fr,Hauts-de-France,Valenciennes,59300
+France,fr,Hauts-de-France,Douai,59500
+France,fr,Hauts-de-France,Arras,62000
+France,fr,Hauts-de-France,Laon,02000
+France,fr,Hauts-de-France,Beauvais,60000
+France,fr,Hauts-de-France,Saint-Quentin,02100
+France,fr,Hauts-de-France,Compiègne,60200
+France,fr,Hauts-de-France,Lens,62300
+France,fr,Pays de la Loire,Nantes,44000
+France,fr,Pays de la Loire,Angers,49000
+France,fr,Pays de la Loire,Le Mans,72000
+France,fr,Pays de la Loire,Saint-Nazaire,44600
+France,fr,Pays de la Loire,La Roche-sur-Yon,85000
+France,fr,Pays de la Loire,Cholet,49300
+France,fr,Pays de la Loire,Laval,53000
+France,fr,Pays de la Loire,Saumur,49400
+France,fr,Pays de la Loire,Les Sables-d'Olonne,85100
+France,fr,Bretagne,Rennes,35000
+France,fr,Bretagne,Brest,29200
+France,fr,Bretagne,Lorient,56100
+France,fr,Bretagne,Quimper,29000
+France,fr,Bretagne,Vannes,56000
+France,fr,Bretagne,Saint-Brieuc,22000
+France,fr,Bretagne,Saint-Malo,35400
+France,fr,Bretagne,Lannion,22300
+France,fr,Bretagne,Morlaix,29600
+France,fr,Bretagne,Concarneau,29900
+France,fr,Bretagne,Fougères,35300
+France,fr,Normandie,Rouen,76000
+France,fr,Normandie,Caen,14000
+France,fr,Normandie,Le Havre,76600
+France,fr,Normandie,Cherbourg,50100
+France,fr,Normandie,Évreux,27000
+France,fr,Normandie,Dieppe,76200
+France,fr,Normandie,Alençon,61000
+France,fr,Normandie,Lisieux,14100
+France,fr,Normandie,Bayeux,14400
+France,fr,Bourgogne-Franche-Comté,Dijon,21000
+France,fr,Bourgogne-Franche-Comté,Besançon,25000
+France,fr,Bourgogne-Franche-Comté,Belfort,90000
+France,fr,Bourgogne-Franche-Comté,Auxerre,89000
+France,fr,Bourgogne-Franche-Comté,Chalon-sur-Saône,71100
+France,fr,Bourgogne-Franche-Comté,Mâcon,71000
+France,fr,Bourgogne-Franche-Comté,Nevers,58000
+France,fr,Bourgogne-Franche-Comté,Montbéliard,25200
+France,fr,Bourgogne-Franche-Comté,Lons-le-Saunier,39000
+France,fr,Bourgogne-Franche-Comté,Dole,39100
+France,fr,Centre-Val de Loire,Tours,37000
+France,fr,Centre-Val de Loire,Orléans,45000
+France,fr,Centre-Val de Loire,Bourges,18000
+France,fr,Centre-Val de Loire,Blois,41000
+France,fr,Centre-Val de Loire,Chartres,28000
+France,fr,Centre-Val de Loire,Châteauroux,36000
+France,fr,Centre-Val de Loire,Dreux,28100
+France,fr,Centre-Val de Loire,Vierzon,18100
+France,fr,Centre-Val de Loire,Vendôme,41100
+France,fr,Corse,Ajaccio,20000
+France,fr,Corse,Bastia,20200
+France,fr,Corse,Porto-Vecchio,20137
+France,fr,Corse,Corte,20250
+France,fr,Corse,Calvi,20260
+Spain,es,Andalucía,Sevilla,41001
+Spain,es,Andalucía,Málaga,29001
+Spain,es,Andalucía,Córdoba,14001
+Spain,es,Andalucía,Granada,18001
+Spain,es,Andalucía,Jerez,11401
+Spain,es,Andalucía,Almería,04001
+Spain,es,Andalucía,Huelva,21001
+Spain,es,Andalucía,Cádiz,11001
+Spain,es,Andalucía,Jaén,23001
+Spain,es,Andalucía,Marbella,29601
+Spain,es,Andalucía,Algeciras,11201
+Spain,es,Andalucía,Linares,23700
+Spain,es,Cataluña,Barcelona,08001
+Spain,es,Cataluña,Terrassa,08221
+Spain,es,Cataluña,Sabadell,08201
+Spain,es,Cataluña,Hospitalet,08901
+Spain,es,Cataluña,Badalona,08911
+Spain,es,Cataluña,Tarragona,43001
+Spain,es,Cataluña,Lleida,25001
+Spain,es,Cataluña,Girona,17001
+Spain,es,Cataluña,Mataró,08301
+Spain,es,Cataluña,Reus,43201
+Spain,es,Cataluña,Manresa,08240
+Spain,es,Cataluña,Vic,08500
+Spain,es,Comunidad de Madrid,Madrid,28001
+Spain,es,Comunidad de Madrid,Móstoles,28930
+Spain,es,Comunidad de Madrid,Alcalá de Henares,28801
+Spain,es,Comunidad de Madrid,Fuenlabrada,28940
+Spain,es,Comunidad de Madrid,Leganés,28910
+Spain,es,Comunidad de Madrid,Getafe,28901
+Spain,es,Comunidad de Madrid,Alcorcón,28920
+Spain,es,Comunidad de Madrid,Torrejón de Ardoz,28850
+Spain,es,Comunidad de Madrid,Parla,28980
+Spain,es,Comunidad de Madrid,Alcobendas,28100
+Spain,es,Comunidad de Madrid,Las Rozas,28230
+Spain,es,Comunidad Valenciana,Valencia,46001
+Spain,es,Comunidad Valenciana,Alicante,03001
+Spain,es,Comunidad Valenciana,Elche,03201
+Spain,es,Comunidad Valenciana,Castellón,12001
+Spain,es,Comunidad Valenciana,Torrevieja,03180
+Spain,es,Comunidad Valenciana,Benidorm,03500
+Spain,es,Comunidad Valenciana,Orihuela,03300
+Spain,es,Comunidad Valenciana,Gandía,46700
+Spain,es,Comunidad Valenciana,Sagunto,46500
+Spain,es,País Vasco,Bilbao,48001
+Spain,es,País Vasco,Vitoria-Gasteiz,01001
+Spain,es,País Vasco,San Sebastián,20001
+Spain,es,País Vasco,Barakaldo,48901
+Spain,es,País Vasco,Getxo,48990
+Spain,es,País Vasco,Irún,20300
+Spain,es,País Vasco,Durango,48200
+Spain,es,Galicia,Vigo,36201
+Spain,es,Galicia,A Coruña,15001
+Spain,es,Galicia,Ourense,32001
+Spain,es,Galicia,Santiago de Compostela,15701
+Spain,es,Galicia,Lugo,27001
+Spain,es,Galicia,Pontevedra,36001
+Spain,es,Galicia,Ferrol,15401
+Spain,es,Castilla y León,Valladolid,47001
+Spain,es,Castilla y León,Burgos,09001
+Spain,es,Castilla y León,Salamanca,37001
+Spain,es,Castilla y León,León,24001
+Spain,es,Castilla y León,Palencia,34001
+Spain,es,Castilla y León,Zamora,49001
+Spain,es,Castilla y León,Segovia,40001
+Spain,es,Castilla y León,Ávila,05001
+Spain,es,Castilla y León,Soria,42001
+Spain,es,Castilla-La Mancha,Albacete,02001
+Spain,es,Castilla-La Mancha,Toledo,45001
+Spain,es,Castilla-La Mancha,Ciudad Real,13001
+Spain,es,Castilla-La Mancha,Guadalajara,19001
+Spain,es,Castilla-La Mancha,Cuenca,16001
+Spain,es,Castilla-La Mancha,Talavera,45600
+Spain,es,Castilla-La Mancha,Puertollano,13500
+Spain,es,Canarias,Las Palmas,35001
+Spain,es,Canarias,Santa Cruz de Tenerife,38001
+Spain,es,Canarias,La Laguna,38200
+Spain,es,Canarias,Arrecife,35500
+Spain,es,Canarias,Puerto del Rosario,35600
+Spain,es,Aragón,Zaragoza,50001
+Spain,es,Aragón,Huesca,22001
+Spain,es,Aragón,Teruel,44001
+Spain,es,Aragón,Calatayud,50300
+Spain,es,Aragón,Barbastro,22300
+Spain,es,Islas Baleares,Palma de Mallorca,07001
+Spain,es,Islas Baleares,Ibiza,07800
+Spain,es,Islas Baleares,Manacor,07500
+Spain,es,Islas Baleares,Mahón,07701
+Spain,es,Islas Baleares,Ciutadella,07760
+Spain,es,Murcia,Murcia,30001
+Spain,es,Murcia,Cartagena,30201
+Spain,es,Murcia,Lorca,30800
+Spain,es,Murcia,Molina de Segura,30500
+Spain,es,Murcia,Yecla,30510
+Spain,es,Extremadura,Badajoz,06001
+Spain,es,Extremadura,Cáceres,10001
+Spain,es,Extremadura,Mérida,06800
+Spain,es,Extremadura,Plasencia,10600
+Spain,es,Extremadura,Don Benito,06400
+Spain,es,Asturias,Oviedo,33001
+Spain,es,Asturias,Gijón,33201
+Spain,es,Asturias,Avilés,33400
+Spain,es,Asturias,Mieres,33600
+Spain,es,Asturias,Langreo,33900
+Spain,es,Navarra,Pamplona,31001
+Spain,es,Navarra,Tudela,31500
+Spain,es,Navarra,Estella,31200
+Spain,es,Navarra,Barañáin,31010
+Spain,es,Cantabria,Santander,39001
+Spain,es,Cantabria,Torrelavega,39300
+Spain,es,Cantabria,Castro-Urdiales,39700
+Spain,es,Cantabria,Camargo,39600
+Spain,es,La Rioja,Logroño,26001
+Spain,es,La Rioja,Calahorra,26500
+Spain,es,La Rioja,Arnedo,26580
+Italy,it,Lombardia,Milano,20121
+Italy,it,Lombardia,Brescia,25121
+Italy,it,Lombardia,Bergamo,24121
+Italy,it,Lombardia,Monza,20900
+Italy,it,Lombardia,Como,22100
+Italy,it,Lombardia,Varese,21100
+Italy,it,Lombardia,Pavia,27100
+Italy,it,Lombardia,Cremona,26100
+Italy,it,Lombardia,Mantova,46100
+Italy,it,Lombardia,Lecco,23900
+Italy,it,Lombardia,Lodi,26900
+Italy,it,Lombardia,Sondrio,23100
+Italy,it,Lombardia,Busto Arsizio,21052
+Italy,it,Lombardia,Sesto San Giovanni,20099
+Italy,it,Lazio,Roma,00118
+Italy,it,Lazio,Latina,04100
+Italy,it,Lazio,Frosinone,03100
+Italy,it,Lazio,Viterbo,01100
+Italy,it,Lazio,Rieti,02100
+Italy,it,Lazio,Tivoli,00019
+Italy,it,Lazio,Civitavecchia,00053
+Italy,it,Lazio,Guidonia,00012
+Italy,it,Lazio,Fiumicino,00054
+Italy,it,Campania,Napoli,80121
+Italy,it,Campania,Salerno,84121
+Italy,it,Campania,Caserta,81100
+Italy,it,Campania,Torre del Greco,80059
+Italy,it,Campania,Giugliano,80014
+Italy,it,Campania,Avellino,83100
+Italy,it,Campania,Benevento,82100
+Italy,it,Campania,Castellammare,80053
+Italy,it,Veneto,Venezia,30121
+Italy,it,Veneto,Verona,37121
+Italy,it,Veneto,Padova,35121
+Italy,it,Veneto,Vicenza,36100
+Italy,it,Veneto,Treviso,31100
+Italy,it,Veneto,Rovigo,45100
+Italy,it,Veneto,Belluno,32100
+Italy,it,Veneto,Mestre,30171
+Italy,it,Veneto,Chioggia,30015
+Italy,it,Piemonte,Torino,10121
+Italy,it,Piemonte,Novara,28100
+Italy,it,Piemonte,Alessandria,15121
+Italy,it,Piemonte,Asti,14100
+Italy,it,Piemonte,Cuneo,12100
+Italy,it,Piemonte,Vercelli,13100
+Italy,it,Piemonte,Biella,13900
+Italy,it,Piemonte,Verbania,28922
+Italy,it,Piemonte,Ivrea,10015
+Italy,it,Emilia-Romagna,Bologna,40121
+Italy,it,Emilia-Romagna,Parma,43121
+Italy,it,Emilia-Romagna,Modena,41121
+Italy,it,Emilia-Romagna,Reggio Emilia,42121
+Italy,it,Emilia-Romagna,Ravenna,48121
+Italy,it,Emilia-Romagna,Rimini,47921
+Italy,it,Emilia-Romagna,Ferrara,44121
+Italy,it,Emilia-Romagna,Forlì,47121
+Italy,it,Emilia-Romagna,Piacenza,29121
+Italy,it,Emilia-Romagna,Cesena,47521
+Italy,it,Emilia-Romagna,Imola,40026
+Italy,it,Toscana,Firenze,50121
+Italy,it,Toscana,Prato,59100
+Italy,it,Toscana,Livorno,57121
+Italy,it,Toscana,Pisa,56121
+Italy,it,Toscana,Arezzo,52100
+Italy,it,Toscana,Lucca,55100
+Italy,it,Toscana,Siena,53100
+Italy,it,Toscana,Grosseto,58100
+Italy,it,Toscana,Pistoia,51100
+Italy,it,Toscana,Massa,54100
+Italy,it,Sicilia,Palermo,90121
+Italy,it,Sicilia,Catania,95121
+Italy,it,Sicilia,Messina,98121
+Italy,it,Sicilia,Siracusa,96100
+Italy,it,Sicilia,Ragusa,97100
+Italy,it,Sicilia,Trapani,91100
+Italy,it,Sicilia,Agrigento,92100
+Italy,it,Sicilia,Caltanissetta,93100
+Italy,it,Sicilia,Enna,94100
+Italy,it,Puglia,Bari,70121
+Italy,it,Puglia,Taranto,74121
+Italy,it,Puglia,Foggia,71121
+Italy,it,Puglia,Lecce,73100
+Italy,it,Puglia,Brindisi,72100
+Italy,it,Puglia,Andria,76123
+Italy,it,Puglia,Barletta,76121
+Italy,it,Puglia,Altamura,70022
+Italy,it,Sardegna,Cagliari,09121
+Italy,it,Sardegna,Sassari,07100
+Italy,it,Sardegna,Nuoro,08100
+Italy,it,Sardegna,Oristano,09170
+Italy,it,Sardegna,Olbia,07026
+Italy,it,Sardegna,Alghero,07041
+Italy,it,Calabria,Reggio Calabria,89121
+Italy,it,Calabria,Catanzaro,88100
+Italy,it,Calabria,Cosenza,87100
+Italy,it,Calabria,Crotone,88900
+Italy,it,Calabria,Vibo Valentia,89900
+Italy,it,Liguria,Genova,16121
+Italy,it,Liguria,La Spezia,19121
+Italy,it,Liguria,Savona,17100
+Italy,it,Liguria,Imperia,18100
+Italy,it,Liguria,Sanremo,18038
+Italy,it,Liguria,Rapallo,16035
+Italy,it,Marche,Ancona,60121
+Italy,it,Marche,Pesaro,61121
+Italy,it,Marche,Fano,61032
+Italy,it,Marche,Ascoli Piceno,63100
+Italy,it,Marche,Macerata,62100
+Italy,it,Marche,Urbino,61029
+Italy,it,Friuli Venezia Giulia,Trieste,34121
+Italy,it,Friuli Venezia Giulia,Udine,33100
+Italy,it,Friuli Venezia Giulia,Pordenone,33170
+Italy,it,Friuli Venezia Giulia,Gorizia,34170
+Italy,it,Abruzzo,L'Aquila,67100
+Italy,it,Abruzzo,Pescara,65121
+Italy,it,Abruzzo,Chieti,66100
+Italy,it,Abruzzo,Teramo,64100
+Italy,it,Trentino-Alto Adige,Trento,38121
+Italy,it,Trentino-Alto Adige,Bolzano,39100
+Italy,it,Trentino-Alto Adige,Merano,39012
+Italy,it,Trentino-Alto Adige,Rovereto,38068
+Italy,it,Trentino-Alto Adige,Bressanone,39042
+Italy,it,Umbria,Perugia,06121
+Italy,it,Umbria,Terni,05100
+Italy,it,Umbria,Foligno,06034
+Italy,it,Umbria,Spoleto,06049
+Italy,it,Umbria,Città di Castello,06012
+Italy,it,Basilicata,Potenza,85100
+Italy,it,Basilicata,Matera,75100
+Italy,it,Basilicata,Melfi,85025
+Italy,it,Molise,Campobasso,86100
+Italy,it,Molise,Isernia,86170
+Italy,it,Molise,Termoli,86039
+Italy,it,Valle d'Aosta,Aosta,11100
+Italy,it,Valle d'Aosta,Courmayeur,11013
+Italy,it,Valle d'Aosta,Saint-Vincent,11027
+Netherlands,nl,Noord-Holland,Amsterdam,1011
+Netherlands,nl,Noord-Holland,Haarlem,2011
+Netherlands,nl,Noord-Holland,Zaandam,1506
+Netherlands,nl,Noord-Holland,Hilversum,1211
+Netherlands,nl,Noord-Holland,Alkmaar,1811
+Netherlands,nl,Noord-Holland,Hoorn,1621
+Netherlands,nl,Noord-Holland,Den Helder,1781
+Netherlands,nl,Noord-Holland,Purmerend,1441
+Netherlands,nl,Noord-Holland,Amstelveen,1181
+Netherlands,nl,Zuid-Holland,Rotterdam,3011
+Netherlands,nl,Zuid-Holland,Den Haag,2511
+Netherlands,nl,Zuid-Holland,Leiden,2311
+Netherlands,nl,Zuid-Holland,Dordrecht,3311
+Netherlands,nl,Zuid-Holland,Delft,2611
+Netherlands,nl,Zuid-Holland,Gouda,2801
+Netherlands,nl,Zuid-Holland,Zoetermeer,2711
+Netherlands,nl,Zuid-Holland,Schiedam,3111
+Netherlands,nl,Zuid-Holland,Vlaardingen,3131
+Netherlands,nl,Zuid-Holland,Alphen aan den Rijn,2401
+Netherlands,nl,Noord-Brabant,Eindhoven,5611
+Netherlands,nl,Noord-Brabant,Tilburg,5038
+Netherlands,nl,Noord-Brabant,Breda,4811
+Netherlands,nl,Noord-Brabant,'s-Hertogenbosch,5211
+Netherlands,nl,Noord-Brabant,Helmond,5701
+Netherlands,nl,Noord-Brabant,Oss,5341
+Netherlands,nl,Noord-Brabant,Roosendaal,4701
+Netherlands,nl,Noord-Brabant,Bergen op Zoom,4611
+Netherlands,nl,Noord-Brabant,Waalwijk,5141
+Netherlands,nl,Gelderland,Arnhem,6811
+Netherlands,nl,Gelderland,Nijmegen,6511
+Netherlands,nl,Gelderland,Apeldoorn,7311
+Netherlands,nl,Gelderland,Ede,6711
+Netherlands,nl,Gelderland,Doetinchem,7001
+Netherlands,nl,Gelderland,Tiel,4001
+Netherlands,nl,Gelderland,Harderwijk,3841
+Netherlands,nl,Gelderland,Zutphen,7201
+Netherlands,nl,Gelderland,Wageningen,6701
+Netherlands,nl,Utrecht,Utrecht,3511
+Netherlands,nl,Utrecht,Amersfoort,3811
+Netherlands,nl,Utrecht,Veenendaal,3901
+Netherlands,nl,Utrecht,Nieuwegein,3430
+Netherlands,nl,Utrecht,Zeist,3701
+Netherlands,nl,Utrecht,IJsselstein,3401
+Netherlands,nl,Overijssel,Zwolle,8011
+Netherlands,nl,Overijssel,Enschede,7511
+Netherlands,nl,Overijssel,Deventer,7411
+Netherlands,nl,Overijssel,Hengelo,7551
+Netherlands,nl,Overijssel,Almelo,7607
+Netherlands,nl,Overijssel,Kampen,8261
+Netherlands,nl,Limburg,Maastricht,6211
+Netherlands,nl,Limburg,Venlo,5911
+Netherlands,nl,Limburg,Heerlen,6411
+Netherlands,nl,Limburg,Sittard,6131
+Netherlands,nl,Limburg,Roermond,6041
+Netherlands,nl,Limburg,Weert,6001
+Netherlands,nl,Friesland,Leeuwarden,8911
+Netherlands,nl,Friesland,Drachten,9203
+Netherlands,nl,Friesland,Sneek,8601
+Netherlands,nl,Friesland,Heerenveen,8441
+Netherlands,nl,Friesland,Harlingen,8861
+Netherlands,nl,Groningen,Groningen,9711
+Netherlands,nl,Groningen,Veendam,9641
+Netherlands,nl,Groningen,Winschoten,9671
+Netherlands,nl,Groningen,Hoogezand,9601
+Netherlands,nl,Groningen,Stadskanaal,9501
+Netherlands,nl,Drenthe,Assen,9401
+Netherlands,nl,Drenthe,Emmen,7811
+Netherlands,nl,Drenthe,Hoogeveen,7901
+Netherlands,nl,Drenthe,Meppel,7941
+Netherlands,nl,Drenthe,Coevorden,7741
+Netherlands,nl,Flevoland,Almere,1315
+Netherlands,nl,Flevoland,Lelystad,8231
+Netherlands,nl,Flevoland,Dronten,8251
+Netherlands,nl,Zeeland,Middelburg,4331
+Netherlands,nl,Zeeland,Vlissingen,4381
+Netherlands,nl,Zeeland,Goes,4461
+Netherlands,nl,Zeeland,Terneuzen,4531
+Belgium,be,Brussels,Brussels,1000
+Belgium,be,Brussels,Schaerbeek,1030
+Belgium,be,Brussels,Anderlecht,1070
+Belgium,be,Brussels,Molenbeek,1080
+Belgium,be,Brussels,Ixelles,1050
+Belgium,be,Brussels,Uccle,1180
+Belgium,be,Flanders,Antwerp,2000
+Belgium,be,Flanders,Ghent,9000
+Belgium,be,Flanders,Bruges,8000
+Belgium,be,Flanders,Leuven,3000
+Belgium,be,Flanders,Mechelen,2800
+Belgium,be,Flanders,Aalst,9300
+Belgium,be,Flanders,Hasselt,3500
+Belgium,be,Flanders,Kortrijk,8500
+Belgium,be,Flanders,Ostend,8400
+Belgium,be,Flanders,Genk,3600
+Belgium,be,Flanders,Turnhout,2300
+Belgium,be,Flanders,Roeselare,8800
+Belgium,be,Flanders,Sint-Niklaas,9100
+Belgium,be,Flanders,Dendermonde,9200
+Belgium,be,Wallonia,Liège,4000
+Belgium,be,Wallonia,Charleroi,6000
+Belgium,be,Wallonia,Namur,5000
+Belgium,be,Wallonia,Mons,7000
+Belgium,be,Wallonia,Tournai,7500
+Belgium,be,Wallonia,La Louvière,7100
+Belgium,be,Wallonia,Verviers,4800
+Belgium,be,Wallonia,Arlon,6700
+Belgium,be,Wallonia,Wavre,1300
+Belgium,be,Wallonia,Mouscron,7700
+Switzerland,ch,Zürich,Zürich,8001
+Switzerland,ch,Zürich,Winterthur,8400
+Switzerland,ch,Zürich,Uster,8610
+Switzerland,ch,Zürich,Dübendorf,8600
+Switzerland,ch,Zürich,Dietikon,8953
+Switzerland,ch,Zürich,Wädenswil,8820
+Switzerland,ch,Bern,Bern,3001
+Switzerland,ch,Bern,Biel/Bienne,2501
+Switzerland,ch,Bern,Thun,3600
+Switzerland,ch,Bern,Burgdorf,3400
+Switzerland,ch,Bern,Langenthal,4900
+Switzerland,ch,Bern,Interlaken,3800
+Switzerland,ch,Vaud,Lausanne,1000
+Switzerland,ch,Vaud,Montreux,1820
+Switzerland,ch,Vaud,Nyon,1260
+Switzerland,ch,Vaud,Yverdon-les-Bains,1400
+Switzerland,ch,Vaud,Vevey,1800
+Switzerland,ch,Vaud,Morges,1110
+Switzerland,ch,Genève,Genève,1201
+Switzerland,ch,Genève,Carouge,1227
+Switzerland,ch,Genève,Vernier,1214
+Switzerland,ch,Genève,Lancy,1212
+Switzerland,ch,Genève,Meyrin,1217
+Switzerland,ch,Genève,Onex,1213
+Switzerland,ch,Basel-Stadt,Basel,4001
+Switzerland,ch,Basel-Stadt,Riehen,4125
+Switzerland,ch,Luzern,Luzern,6003
+Switzerland,ch,Luzern,Emmenbrücke,6020
+Switzerland,ch,Luzern,Kriens,6010
+Switzerland,ch,Luzern,Horw,6048
+Switzerland,ch,St. Gallen,St. Gallen,9000
+Switzerland,ch,St. Gallen,Rapperswil-Jona,8640
+Switzerland,ch,St. Gallen,Wil,9500
+Switzerland,ch,St. Gallen,Buchs,9470
+Switzerland,ch,St. Gallen,Gossau,9200
+Switzerland,ch,Aargau,Aarau,5000
+Switzerland,ch,Aargau,Baden,5400
+Switzerland,ch,Aargau,Wettingen,5430
+Switzerland,ch,Aargau,Brugg,5200
+Switzerland,ch,Aargau,Wohlen,5610
+Switzerland,ch,Aargau,Oftringen,4665
+Switzerland,ch,Ticino,Lugano,6900
+Switzerland,ch,Ticino,Bellinzona,6500
+Switzerland,ch,Ticino,Locarno,6600
+Switzerland,ch,Ticino,Mendrisio,6850
+Switzerland,ch,Ticino,Chiasso,6830
+Switzerland,ch,Valais,Sion,1950
+Switzerland,ch,Valais,Brig,3900
+Switzerland,ch,Valais,Martigny,1920
+Switzerland,ch,Valais,Monthey,1870
+Switzerland,ch,Valais,Sierre,3960
+Switzerland,ch,Valais,Visp,3930
+Austria,at,Wien,Wien Innere Stadt,1010
+Austria,at,Wien,Wien Leopoldstadt,1020
+Austria,at,Wien,Wien Landstraße,1030
+Austria,at,Wien,Wien Favoriten,1100
+Austria,at,Wien,Wien Floridsdorf,1210
+Austria,at,Wien,Wien Donaustadt,1220
+Austria,at,Wien,Wien Liesing,1230
+Austria,at,Wien,Wien Meidling,1120
+Austria,at,Wien,Wien Penzing,1140
+Austria,at,Wien,Wien Ottakring,1160
+Austria,at,Niederösterreich,St. Pölten,3100
+Austria,at,Niederösterreich,Wiener Neustadt,2700
+Austria,at,Niederösterreich,Krems,3500
+Austria,at,Niederösterreich,Baden,2500
+Austria,at,Niederösterreich,Amstetten,3300
+Austria,at,Niederösterreich,Mödling,2340
+Austria,at,Niederösterreich,Tulln,3430
+Austria,at,Niederösterreich,Zwettl,3910
+Austria,at,Niederösterreich,Korneuburg,2100
+Austria,at,Niederösterreich,Klosterneuburg,3400
+Austria,at,Oberösterreich,Linz,4020
+Austria,at,Oberösterreich,Wels,4600
+Austria,at,Oberösterreich,Steyr,4400
+Austria,at,Oberösterreich,Leonding,4060
+Austria,at,Oberösterreich,Traun,4050
+Austria,at,Oberösterreich,Braunau,5280
+Austria,at,Oberösterreich,Gmunden,4810
+Austria,at,Oberösterreich,Ried,4910
+Austria,at,Oberösterreich,Vöcklabruck,4840
+Austria,at,Steiermark,Graz,8010
+Austria,at,Steiermark,Leoben,8700
+Austria,at,Steiermark,Kapfenberg,8605
+Austria,at,Steiermark,Bruck an der Mur,8600
+Austria,at,Steiermark,Leibnitz,8430
+Austria,at,Steiermark,Feldbach,8330
+Austria,at,Steiermark,Judenburg,8750
+Austria,at,Steiermark,Knittelfeld,8720
+Austria,at,Tirol,Innsbruck,6020
+Austria,at,Tirol,Kufstein,6330
+Austria,at,Tirol,Schwaz,6130
+Austria,at,Tirol,Hall in Tirol,6060
+Austria,at,Tirol,Wörgl,6300
+Austria,at,Tirol,Telfs,6410
+Austria,at,Tirol,Lienz,9900
+Austria,at,Tirol,Imst,6460
+Austria,at,Tirol,Kitzbühel,6370
+Austria,at,Salzburg,Salzburg,5020
+Austria,at,Salzburg,Hallein,5400
+Austria,at,Salzburg,Bischofshofen,5500
+Austria,at,Salzburg,St. Johann,5600
+Austria,at,Salzburg,Saalfelden,5760
+Austria,at,Salzburg,Zell am See,5700
+Austria,at,Kärnten,Klagenfurt,9020
+Austria,at,Kärnten,Villach,9500
+Austria,at,Kärnten,Wolfsberg,9400
+Austria,at,Kärnten,Spittal an der Drau,9800
+Austria,at,Kärnten,Feldkirchen,9560
+Austria,at,Kärnten,St. Veit an der Glan,9300
+Austria,at,Vorarlberg,Bregenz,6900
+Austria,at,Vorarlberg,Dornbirn,6850
+Austria,at,Vorarlberg,Feldkirch,6800
+Austria,at,Vorarlberg,Lustenau,6890
+Austria,at,Vorarlberg,Hohenems,6845
+Austria,at,Vorarlberg,Bludenz,6700
+Austria,at,Burgenland,Eisenstadt,7000
+Austria,at,Burgenland,Oberwart,7400
+Austria,at,Burgenland,Neusiedl am See,7100
+Austria,at,Burgenland,Güssing,7540
+Austria,at,Burgenland,Jennersdorf,8380
+Sweden,se,Stockholm,Stockholm,111 20
+Sweden,se,Stockholm,Solna,171 45
+Sweden,se,Stockholm,Sundbyberg,172 31
+Sweden,se,Stockholm,Huddinge,141 44
+Sweden,se,Stockholm,Sollentuna,191 44
+Sweden,se,Stockholm,Nacka,131 52
+Sweden,se,Stockholm,Täby,183 32
+Sweden,se,Stockholm,Södertälje,151 72
+Sweden,se,Stockholm,Upplands Väsby,194 30
+Sweden,se,Västra Götaland,Göteborg,411 03
+Sweden,se,Västra Götaland,Borås,503 31
+Sweden,se,Västra Götaland,Trollhättan,461 30
+Sweden,se,Västra Götaland,Uddevalla,451 30
+Sweden,se,Västra Götaland,Skövde,541 30
+Sweden,se,Västra Götaland,Mölndal,431 30
+Sweden,se,Västra Götaland,Lidköping,531 31
+Sweden,se,Västra Götaland,Alingsås,441 30
+Sweden,se,Västra Götaland,Kungälv,442 30
+Sweden,se,Skåne,Malmö,211 18
+Sweden,se,Skåne,Helsingborg,252 20
+Sweden,se,Skåne,Lund,222 20
+Sweden,se,Skåne,Kristianstad,291 31
+Sweden,se,Skåne,Landskrona,261 31
+Sweden,se,Skåne,Trelleborg,231 42
+Sweden,se,Skåne,Ängelholm,262 31
+Sweden,se,Skåne,Ystad,271 31
+Sweden,se,Östergötland,Linköping,581 83
+Sweden,se,Östergötland,Norrköping,602 21
+Sweden,se,Östergötland,Motala,591 30
+Sweden,se,Östergötland,Mjölby,595 30
+Sweden,se,Uppsala,Uppsala,753 10
+Sweden,se,Uppsala,Enköping,745 30
+Sweden,se,Uppsala,Bålsta,746 31
+Sweden,se,Jönköping,Jönköping,553 22
+Sweden,se,Jönköping,Nässjö,571 31
+Sweden,se,Jönköping,Värnamo,331 30
+Sweden,se,Jönköping,Huskvarna,561 31
+Sweden,se,Dalarna,Falun,791 71
+Sweden,se,Dalarna,Borlänge,781 70
+Sweden,se,Dalarna,Mora,792 30
+Sweden,se,Dalarna,Ludvika,771 30
+Sweden,se,Dalarna,Avesta,774 30
+Sweden,se,Norrbotten,Luleå,972 31
+Sweden,se,Norrbotten,Kiruna,981 31
+Sweden,se,Norrbotten,Gällivare,982 31
+Sweden,se,Norrbotten,Boden,961 31
+Sweden,se,Norrbotten,Piteå,941 31
+Sweden,se,Västerbotten,Umeå,903 25
+Sweden,se,Västerbotten,Skellefteå,931 31
+Sweden,se,Västerbotten,Lycksele,921 31
+Norway,no,Oslo,Oslo,0101
+Norway,no,Oslo,Oslo Grünerløkka,0555
+Norway,no,Oslo,Oslo Frogner,0265
+Norway,no,Vestland,Bergen,5003
+Norway,no,Vestland,Askøy,5300
+Norway,no,Vestland,Stord,5411
+Norway,no,Vestland,Voss,5700
+Norway,no,Vestland,Odda,5750
+Norway,no,Trøndelag,Trondheim,7010
+Norway,no,Trøndelag,Steinkjer,7713
+Norway,no,Trøndelag,Namsos,7800
+Norway,no,Trøndelag,Levanger,7600
+Norway,no,Rogaland,Stavanger,4001
+Norway,no,Rogaland,Sandnes,4301
+Norway,no,Rogaland,Haugesund,5501
+Norway,no,Rogaland,Egersund,4370
+Norway,no,Viken,Drammen,3017
+Norway,no,Viken,Fredrikstad,1601
+Norway,no,Viken,Sarpsborg,1702
+Norway,no,Viken,Moss,1530
+Norway,no,Viken,Lillestrøm,2003
+Norway,no,Viken,Ski,1400
+Norway,no,Viken,Halden,1767
+Norway,no,Viken,Asker,1372
+Norway,no,Viken,Jessheim,2050
+Norway,no,Nordland,Bodø,8006
+Norway,no,Nordland,Narvik,8514
+Norway,no,Nordland,Mo i Rana,8601
+Norway,no,Nordland,Sortland,8401
+Norway,no,Troms og Finnmark,Tromsø,9008
+Norway,no,Troms og Finnmark,Hammerfest,9600
+Norway,no,Troms og Finnmark,Alta,9510
+Norway,no,Troms og Finnmark,Harstad,9479
+Norway,no,Vestfold og Telemark,Skien,3715
+Norway,no,Vestfold og Telemark,Tønsberg,3110
+Norway,no,Vestfold og Telemark,Sandefjord,3201
+Norway,no,Vestfold og Telemark,Porsgrunn,3916
+Norway,no,Vestfold og Telemark,Larvik,3256
+Norway,no,Innlandet,Hamar,2317
+Norway,no,Innlandet,Lillehammer,2609
+Norway,no,Innlandet,Gjøvik,2815
+Norway,no,Innlandet,Elverum,2408
+Norway,no,Innlandet,Kongsvinger,2212
+Norway,no,Agder,Kristiansand,4611
+Norway,no,Agder,Arendal,4836
+Norway,no,Agder,Grimstad,4876
+Norway,no,Agder,Mandal,4515
+Norway,no,Agder,Flekkefjord,4400
+Norway,no,Møre og Romsdal,Ålesund,6003
+Norway,no,Møre og Romsdal,Molde,6413
+Norway,no,Møre og Romsdal,Kristiansund,6509
+Denmark,dk,Hovedstaden,København,1050
+Denmark,dk,Hovedstaden,Frederiksberg,1800
+Denmark,dk,Hovedstaden,Helsingør,3000
+Denmark,dk,Hovedstaden,Hillerød,3400
+Denmark,dk,Hovedstaden,Lyngby,2800
+Denmark,dk,Hovedstaden,Gentofte,2820
+Denmark,dk,Hovedstaden,Glostrup,2600
+Denmark,dk,Hovedstaden,Ballerup,2750
+Denmark,dk,Hovedstaden,Rødovre,2610
+Denmark,dk,Midtjylland,Aarhus,8000
+Denmark,dk,Midtjylland,Herning,7400
+Denmark,dk,Midtjylland,Viborg,8800
+Denmark,dk,Midtjylland,Randers,8900
+Denmark,dk,Midtjylland,Horsens,8700
+Denmark,dk,Midtjylland,Silkeborg,8600
+Denmark,dk,Midtjylland,Ikast,7430
+Denmark,dk,Midtjylland,Holstebro,7500
+Denmark,dk,Syddanmark,Odense,5000
+Denmark,dk,Syddanmark,Esbjerg,6700
+Denmark,dk,Syddanmark,Vejle,7100
+Denmark,dk,Syddanmark,Kolding,6000
+Denmark,dk,Syddanmark,Fredericia,7000
+Denmark,dk,Syddanmark,Aabenraa,6200
+Denmark,dk,Syddanmark,Haderslev,6100
+Denmark,dk,Syddanmark,Sønderborg,6400
+Denmark,dk,Syddanmark,Svendborg,5700
+Denmark,dk,Nordjylland,Aalborg,9000
+Denmark,dk,Nordjylland,Hjørring,9800
+Denmark,dk,Nordjylland,Frederikshavn,9900
+Denmark,dk,Nordjylland,Thisted,7700
+Denmark,dk,Nordjylland,Hobro,9500
+Denmark,dk,Nordjylland,Nykøbing Mors,7900
+Denmark,dk,Sjælland,Roskilde,4000
+Denmark,dk,Sjælland,Næstved,4700
+Denmark,dk,Sjælland,Slagelse,4200
+Denmark,dk,Sjælland,Holbæk,4300
+Denmark,dk,Sjælland,Ringsted,4100
+Denmark,dk,Sjælland,Køge,4600
+Denmark,dk,Sjælland,Nykøbing Falster,4800
+Denmark,dk,Sjælland,Kalundborg,4400
+Finland,fi,Uusimaa,Helsinki,00100
+Finland,fi,Uusimaa,Espoo,02100
+Finland,fi,Uusimaa,Vantaa,01300
+Finland,fi,Uusimaa,Porvoo,06100
+Finland,fi,Uusimaa,Hyvinkää,05800
+Finland,fi,Uusimaa,Järvenpää,04400
+Finland,fi,Uusimaa,Kerava,04200
+Finland,fi,Uusimaa,Lohja,08100
+Finland,fi,Pirkanmaa,Tampere,33100
+Finland,fi,Pirkanmaa,Nokia,37100
+Finland,fi,Pirkanmaa,Ylöjärvi,33470
+Finland,fi,Pirkanmaa,Kangasala,36200
+Finland,fi,Pirkanmaa,Valkeakoski,37600
+Finland,fi,Varsinais-Suomi,Turku,20100
+Finland,fi,Varsinais-Suomi,Salo,24100
+Finland,fi,Varsinais-Suomi,Kaarina,20780
+Finland,fi,Varsinais-Suomi,Raisio,21200
+Finland,fi,Varsinais-Suomi,Naantali,21100
+Finland,fi,Pohjois-Pohjanmaa,Oulu,90100
+Finland,fi,Pohjois-Pohjanmaa,Raahe,92100
+Finland,fi,Pohjois-Pohjanmaa,Ylivieska,84100
+Finland,fi,Pohjois-Pohjanmaa,Kuusamo,93600
+Finland,fi,Keski-Suomi,Jyväskylä,40100
+Finland,fi,Keski-Suomi,Äänekoski,44100
+Finland,fi,Keski-Suomi,Jämsä,42100
+Finland,fi,Pohjois-Savo,Kuopio,70100
+Finland,fi,Pohjois-Savo,Iisalmi,74100
+Finland,fi,Pohjois-Savo,Varkaus,78200
+Finland,fi,Pohjois-Savo,Siilinjärvi,71800
+Finland,fi,Satakunta,Pori,28100
+Finland,fi,Satakunta,Rauma,26100
+Finland,fi,Satakunta,Kankaanpää,38700
+Finland,fi,Päijät-Häme,Lahti,15110
+Finland,fi,Päijät-Häme,Heinola,18100
+Finland,fi,Päijät-Häme,Orimattila,16300
+Finland,fi,Lappi,Rovaniemi,96100
+Finland,fi,Lappi,Tornio,95400
+Finland,fi,Lappi,Kemi,94100
+Finland,fi,Lappi,Sodankylä,99600
+Finland,fi,Lappi,Inari,99800
+Ireland,ie,Leinster,Dublin,D01
+Ireland,ie,Leinster,Drogheda,A92
+Ireland,ie,Leinster,Dundalk,A91
+Ireland,ie,Leinster,Kilkenny,R95
+Ireland,ie,Leinster,Wexford,Y35
+Ireland,ie,Leinster,Naas,W91
+Ireland,ie,Leinster,Athlone,N37
+Ireland,ie,Leinster,Mullingar,N91
+Ireland,ie,Leinster,Tullamore,R35
+Ireland,ie,Leinster,Portlaoise,R32
+Ireland,ie,Leinster,Carlow,R93
+Ireland,ie,Munster,Cork,T12
+Ireland,ie,Munster,Limerick,V94
+Ireland,ie,Munster,Waterford,X91
+Ireland,ie,Munster,Tralee,V92
+Ireland,ie,Munster,Killarney,V93
+Ireland,ie,Munster,Ennis,V95
+Ireland,ie,Munster,Clonmel,E91
+Ireland,ie,Munster,Thurles,E41
+Ireland,ie,Connacht,Galway,H91
+Ireland,ie,Connacht,Sligo,F91
+Ireland,ie,Connacht,Castlebar,F23
+Ireland,ie,Connacht,Roscommon,F42
+Ireland,ie,Connacht,Ballinasloe,H53
+Ireland,ie,Ulster (ROI),Letterkenny,F92
+Ireland,ie,Ulster (ROI),Monaghan,H18
+Ireland,ie,Ulster (ROI),Cavan,H12
+Portugal,pt,Lisboa,Lisboa,1000
+Portugal,pt,Lisboa,Amadora,2700
+Portugal,pt,Lisboa,Sintra,2710
+Portugal,pt,Lisboa,Cascais,2750
+Portugal,pt,Lisboa,Oeiras,2780
+Portugal,pt,Lisboa,Loures,2670
+Portugal,pt,Lisboa,Almada,2800
+Portugal,pt,Lisboa,Setúbal,2900
+Portugal,pt,Porto,Porto,4000
+Portugal,pt,Porto,Vila Nova de Gaia,4400
+Portugal,pt,Porto,Matosinhos,4450
+Portugal,pt,Porto,Gondomar,4420
+Portugal,pt,Porto,Maia,4470
+Portugal,pt,Porto,Valongo,4440
+Portugal,pt,Braga,Braga,4700
+Portugal,pt,Braga,Guimarães,4800
+Portugal,pt,Braga,Barcelos,4750
+Portugal,pt,Braga,Famalicão,4760
+Portugal,pt,Aveiro,Aveiro,3800
+Portugal,pt,Aveiro,Ovar,3880
+Portugal,pt,Aveiro,Águeda,3750
+Portugal,pt,Aveiro,Ílhavo,3830
+Portugal,pt,Faro (Algarve),Faro,8000
+Portugal,pt,Faro (Algarve),Portimão,8500
+Portugal,pt,Faro (Algarve),Albufeira,8200
+Portugal,pt,Faro (Algarve),Lagos,8600
+Portugal,pt,Faro (Algarve),Loulé,8100
+Portugal,pt,Faro (Algarve),Tavira,8800
+Portugal,pt,Faro (Algarve),Olhão,8700
+Portugal,pt,Coimbra,Coimbra,3000
+Portugal,pt,Coimbra,Figueira da Foz,3080
+Portugal,pt,Coimbra,Leiria,2400
+Portugal,pt,Madeira,Funchal,9000
+Portugal,pt,Madeira,Câmara de Lobos,9300
+Portugal,pt,Madeira,Machico,9200
+Portugal,pt,Açores,Ponta Delgada,9500
+Portugal,pt,Açores,Angra do Heroísmo,9700
+Poland,pl,Mazowieckie,Warszawa,00-001
+Poland,pl,Mazowieckie,Radom,26-600
+Poland,pl,Mazowieckie,Płock,09-400
+Poland,pl,Mazowieckie,Siedlce,08-110
+Poland,pl,Mazowieckie,Pruszków,05-800
+Poland,pl,Mazowieckie,Legionowo,05-120
+Poland,pl,Mazowieckie,Ostrołęka,07-410
+Poland,pl,Mazowieckie,Piaseczno,05-500
+Poland,pl,Małopolskie,Kraków,30-001
+Poland,pl,Małopolskie,Tarnów,33-100
+Poland,pl,Małopolskie,Nowy Sącz,33-300
+Poland,pl,Małopolskie,Oświęcim,32-600
+Poland,pl,Małopolskie,Chrzanów,32-500
+Poland,pl,Małopolskie,Zakopane,34-500
+Poland,pl,Śląskie,Katowice,40-001
+Poland,pl,Śląskie,Częstochowa,42-200
+Poland,pl,Śląskie,Sosnowiec,41-200
+Poland,pl,Śląskie,Gliwice,44-100
+Poland,pl,Śląskie,Zabrze,41-800
+Poland,pl,Śląskie,Bytom,41-900
+Poland,pl,Śląskie,Bielsko-Biała,43-300
+Poland,pl,Śląskie,Rybnik,44-200
+Poland,pl,Śląskie,Tychy,43-100
+Poland,pl,Wielkopolskie,Poznań,60-001
+Poland,pl,Wielkopolskie,Kalisz,62-800
+Poland,pl,Wielkopolskie,Konin,62-500
+Poland,pl,Wielkopolskie,Piła,64-920
+Poland,pl,Wielkopolskie,Leszno,64-100
+Poland,pl,Wielkopolskie,Gniezno,62-200
+Poland,pl,Dolnośląskie,Wrocław,50-001
+Poland,pl,Dolnośląskie,Wałbrzych,58-300
+Poland,pl,Dolnośląskie,Legnica,59-220
+Poland,pl,Dolnośląskie,Jelenia Góra,58-500
+Poland,pl,Dolnośląskie,Lubin,59-300
+Poland,pl,Dolnośląskie,Głogów,67-200
+Poland,pl,Łódzkie,Łódź,90-001
+Poland,pl,Łódzkie,Piotrków Trybunalski,97-300
+Poland,pl,Łódzkie,Pabianice,95-200
+Poland,pl,Łódzkie,Tomaszów Mazowiecki,97-200
+Poland,pl,Łódzkie,Bełchatów,97-400
+Poland,pl,Łódzkie,Zgierz,95-100
+Poland,pl,Pomorskie,Gdańsk,80-001
+Poland,pl,Pomorskie,Gdynia,81-300
+Poland,pl,Pomorskie,Sopot,81-700
+Poland,pl,Pomorskie,Słupsk,76-200
+Poland,pl,Pomorskie,Tczew,83-100
+Poland,pl,Pomorskie,Starogard Gdański,83-200
+Poland,pl,Zachodniopomorskie,Szczecin,70-001
+Poland,pl,Zachodniopomorskie,Koszalin,75-001
+Poland,pl,Zachodniopomorskie,Stargard,73-110
+Poland,pl,Zachodniopomorskie,Kołobrzeg,78-100
+Poland,pl,Zachodniopomorskie,Świnoujście,72-600
+Poland,pl,Podkarpackie,Rzeszów,35-001
+Poland,pl,Podkarpackie,Przemyśl,37-700
+Poland,pl,Podkarpackie,Stalowa Wola,37-450
+Poland,pl,Podkarpackie,Mielec,39-300
+Poland,pl,Podkarpackie,Krosno,38-400
+Poland,pl,Lubelskie,Lublin,20-001
+Poland,pl,Lubelskie,Zamość,22-400
+Poland,pl,Lubelskie,Chełm,22-100
+Poland,pl,Lubelskie,Biała Podlaska,21-500
+Poland,pl,Lubelskie,Puławy,24-100
+Poland,pl,Kujawsko-Pomorskie,Bydgoszcz,85-001
+Poland,pl,Kujawsko-Pomorskie,Toruń,87-100
+Poland,pl,Kujawsko-Pomorskie,Włocławek,87-800
+Poland,pl,Kujawsko-Pomorskie,Grudziądz,86-300
+Poland,pl,Kujawsko-Pomorskie,Inowrocław,88-100
+Poland,pl,Warmińsko-Mazurskie,Olsztyn,10-001
+Poland,pl,Warmińsko-Mazurskie,Elbląg,82-300
+Poland,pl,Warmińsko-Mazurskie,Ełk,19-300
+Poland,pl,Warmińsko-Mazurskie,Ostróda,14-100
+Poland,pl,Podlaskie,Białystok,15-001
+Poland,pl,Podlaskie,Łomża,18-400
+Poland,pl,Podlaskie,Suwałki,16-400
+Poland,pl,Świętokrzyskie,Kielce,25-001
+Poland,pl,Świętokrzyskie,Starachowice,27-200
+Poland,pl,Świętokrzyskie,Ostrowiec,27-400
+Poland,pl,Lubuskie,Zielona Góra,65-001
+Poland,pl,Lubuskie,Gorzów Wielkopolski,66-400
+Poland,pl,Lubuskie,Nowa Sól,67-100
+Poland,pl,Opolskie,Opole,45-001
+Poland,pl,Opolskie,Nysa,48-300
+Poland,pl,Opolskie,Kędzierzyn-Koźle,47-200
+Czech Republic,cz,Praha,Praha 1,110 00
+Czech Republic,cz,Praha,Praha 2,120 00
+Czech Republic,cz,Praha,Praha 3,130 00
+Czech Republic,cz,Praha,Praha 4,140 00
+Czech Republic,cz,Praha,Praha 5,150 00
+Czech Republic,cz,Praha,Praha 6,160 00
+Czech Republic,cz,Praha,Praha 8,180 00
+Czech Republic,cz,Praha,Praha 10,100 00
+Czech Republic,cz,Jihomoravský,Brno,602 00
+Czech Republic,cz,Jihomoravský,Znojmo,669 02
+Czech Republic,cz,Jihomoravský,Hodonín,695 01
+Czech Republic,cz,Jihomoravský,Břeclav,690 02
+Czech Republic,cz,Jihomoravský,Vyškov,682 01
+Czech Republic,cz,Moravskoslezský,Ostrava,702 00
+Czech Republic,cz,Moravskoslezský,Opava,746 01
+Czech Republic,cz,Moravskoslezský,Havířov,736 01
+Czech Republic,cz,Moravskoslezský,Frýdek-Místek,738 01
+Czech Republic,cz,Moravskoslezský,Karviná,733 01
+Czech Republic,cz,Středočeský,Kladno,272 01
+Czech Republic,cz,Středočeský,Mladá Boleslav,293 01
+Czech Republic,cz,Středočeský,Příbram,261 01
+Czech Republic,cz,Středočeský,Kolín,280 02
+Czech Republic,cz,Středočeský,Kutná Hora,284 01
+Czech Republic,cz,Plzeňský,Plzeň,301 00
+Czech Republic,cz,Plzeňský,Klatovy,339 01
+Czech Republic,cz,Plzeňský,Rokycany,337 01
+Czech Republic,cz,Ústecký,Ústí nad Labem,400 01
+Czech Republic,cz,Ústecký,Teplice,415 01
+Czech Republic,cz,Ústecký,Most,434 01
+Czech Republic,cz,Ústecký,Chomutov,430 01
+Czech Republic,cz,Ústecký,Děčín,405 01
+Czech Republic,cz,Královéhradecký,Hradec Králové,500 02
+Czech Republic,cz,Královéhradecký,Trutnov,541 01
+Czech Republic,cz,Královéhradecký,Náchod,547 01
+Czech Republic,cz,Královéhradecký,Jičín,506 01
+Czech Republic,cz,Jihočeský,České Budějovice,370 01
+Czech Republic,cz,Jihočeský,Tábor,390 01
+Czech Republic,cz,Jihočeský,Písek,397 01
+Czech Republic,cz,Jihočeský,Strakonice,386 01
+Czech Republic,cz,Liberecký,Liberec,460 01
+Czech Republic,cz,Liberecký,Jablonec,466 01
+Czech Republic,cz,Liberecký,Česká Lípa,470 01
+Czech Republic,cz,Pardubický,Pardubice,530 02
+Czech Republic,cz,Pardubický,Chrudim,537 01
+Czech Republic,cz,Pardubický,Svitavy,568 02
+Czech Republic,cz,Vysočina,Jihlava,586 01
+Czech Republic,cz,Vysočina,Třebíč,674 01
+Czech Republic,cz,Vysočina,Havlíčkův Brod,580 01
+Czech Republic,cz,Olomoucký,Olomouc,779 00
+Czech Republic,cz,Olomoucký,Prostějov,796 01
+Czech Republic,cz,Olomoucký,Přerov,750 02
+Czech Republic,cz,Olomoucký,Šumperk,787 01
+Czech Republic,cz,Zlínský,Zlín,760 01
+Czech Republic,cz,Zlínský,Uherské Hradiště,686 01
+Czech Republic,cz,Zlínský,Kroměříž,767 01
+Czech Republic,cz,Zlínský,Vsetín,755 01
+Czech Republic,cz,Karlovarský,Karlovy Vary,360 01
+Czech Republic,cz,Karlovarský,Cheb,350 02
+Czech Republic,cz,Karlovarský,Sokolov,356 01
+Greece,gr,Attica,Athens,105 57
+Greece,gr,Attica,Piraeus,185 31
+Greece,gr,Attica,Peristeri,121 31
+Greece,gr,Attica,Nikaia,184 50
+Greece,gr,Attica,Glyfada,166 74
+Greece,gr,Attica,Marousi,151 22
+Greece,gr,Attica,Kifisia,145 61
+Greece,gr,Attica,Kallithea,176 71
+Greece,gr,Central Macedonia,Thessaloniki,546 21
+Greece,gr,Central Macedonia,Serres,621 22
+Greece,gr,Central Macedonia,Katerini,601 00
+Greece,gr,Central Macedonia,Veria,591 00
+Greece,gr,Central Macedonia,Kilkis,611 00
+Greece,gr,Western Greece,Patras,262 21
+Greece,gr,Western Greece,Agrinio,301 00
+Greece,gr,Western Greece,Pyrgos,271 00
+Greece,gr,Crete,Heraklion,712 01
+Greece,gr,Crete,Chania,731 00
+Greece,gr,Crete,Rethymno,741 00
+Greece,gr,Crete,Agios Nikolaos,721 00
+Greece,gr,Thessaly,Larissa,412 21
+Greece,gr,Thessaly,Volos,382 21
+Greece,gr,Thessaly,Trikala,421 00
+Greece,gr,Thessaly,Karditsa,431 00
+Greece,gr,Eastern Macedonia and Thrace,Kavala,654 03
+Greece,gr,Eastern Macedonia and Thrace,Alexandroupoli,681 00
+Greece,gr,Eastern Macedonia and Thrace,Xanthi,671 00
+Greece,gr,Eastern Macedonia and Thrace,Komotini,691 00
+Greece,gr,Peloponnese,Kalamata,241 00
+Greece,gr,Peloponnese,Tripoli,221 00
+Greece,gr,Peloponnese,Corinth,201 00
+Greece,gr,Peloponnese,Sparti,231 00
+Greece,gr,Peloponnese,Nafplio,211 00
+Greece,gr,Central Greece,Lamia,351 00
+Greece,gr,Central Greece,Chalkida,341 00
+Greece,gr,Central Greece,Livadeia,321 00
+Greece,gr,Epirus,Ioannina,452 21
+Greece,gr,Epirus,Arta,471 00
+Greece,gr,Epirus,Preveza,481 00
+Greece,gr,Ionian Islands,Corfu,491 00
+Greece,gr,Ionian Islands,Zakynthos,291 00
+Greece,gr,Ionian Islands,Argostoli,281 00
+Greece,gr,North Aegean,Mytilene,811 00
+Greece,gr,North Aegean,Chios,821 00
+Greece,gr,North Aegean,Samos,831 00
+Greece,gr,South Aegean,Rhodes,851 00
+Greece,gr,South Aegean,Kos,853 00
+Greece,gr,South Aegean,Syros,841 00
+Greece,gr,South Aegean,Mykonos,846 00
+Greece,gr,South Aegean,Santorini,847 00
+Romania,ro,București,București Sector 1,011
+Romania,ro,București,București Sector 2,021
+Romania,ro,București,București Sector 3,031
+Romania,ro,București,București Sector 4,041
+Romania,ro,București,București Sector 5,051
+Romania,ro,București,București Sector 6,061
+Romania,ro,Cluj,Cluj-Napoca,400
+Romania,ro,Cluj,Turda,401
+Romania,ro,Cluj,Dej,405
+Romania,ro,Cluj,Câmpia Turzii,403
+Romania,ro,Timiș,Timișoara,300
+Romania,ro,Timiș,Lugoj,305
+Romania,ro,Timiș,Sânnicolau Mare,307
+Romania,ro,Iași,Iași,700
+Romania,ro,Iași,Pașcani,705
+Romania,ro,Constanța,Constanța,900
+Romania,ro,Constanța,Mangalia,905
+Romania,ro,Constanța,Medgidia,905
+Romania,ro,Brașov,Brașov,500
+Romania,ro,Brașov,Făgăraș,505
+Romania,ro,Brașov,Săcele,505
+Romania,ro,Prahova,Ploiești,100
+Romania,ro,Prahova,Câmpina,105
+Romania,ro,Prahova,Sinaia,106
+Romania,ro,Sibiu,Sibiu,550
+Romania,ro,Sibiu,Mediaș,551
+Romania,ro,Dolj,Craiova,200
+Romania,ro,Dolj,Băilești,207
+Romania,ro,Dolj,Calafat,205
+Romania,ro,Bihor,Oradea,410
+Romania,ro,Bihor,Beiuș,415
+Romania,ro,Bihor,Marghita,415
+Romania,ro,Argeș,Pitești,110
+Romania,ro,Argeș,Câmpulung,115
+Romania,ro,Argeș,Curtea de Argeș,115
+Romania,ro,Maramureș,Baia Mare,430
+Romania,ro,Maramureș,Sighetu Marmației,435
+Romania,ro,Galați,Galați,800
+Romania,ro,Galați,Tecuci,805
+Romania,ro,Mureș,Târgu Mureș,540
+Romania,ro,Mureș,Sighișoara,545
+Romania,ro,Mureș,Reghin,545
+Romania,ro,Hunedoara,Deva,330
+Romania,ro,Hunedoara,Hunedoara,331
+Romania,ro,Hunedoara,Petroșani,332
+Romania,ro,Arad,Arad,310
+Romania,ro,Arad,Ineu,315
+Romania,ro,Suceava,Suceava,720
+Romania,ro,Suceava,Fălticeni,725
+Romania,ro,Suceava,Rădăuți,725
+Romania,ro,Bacău,Bacău,600
+Romania,ro,Bacău,Onești,601
+Romania,ro,Bacău,Moinești,605
+Hungary,hu,Budapest,Budapest I,1011
+Hungary,hu,Budapest,Budapest V,1051
+Hungary,hu,Budapest,Budapest VII,1073
+Hungary,hu,Budapest,Budapest XI,1111
+Hungary,hu,Budapest,Budapest XIII,1131
+Hungary,hu,Budapest,Budapest XIV,1145
+Hungary,hu,Pest,Érd,2030
+Hungary,hu,Pest,Budaörs,2040
+Hungary,hu,Pest,Gödöllő,2100
+Hungary,hu,Pest,Vác,2600
+Hungary,hu,Pest,Szentendre,2000
+Hungary,hu,Pest,Dunakeszi,2120
+Hungary,hu,Borsod-Abaúj-Zemplén,Miskolc,3525
+Hungary,hu,Borsod-Abaúj-Zemplén,Ózd,3600
+Hungary,hu,Borsod-Abaúj-Zemplén,Kazincbarcika,3700
+Hungary,hu,Hajdú-Bihar,Debrecen,4024
+Hungary,hu,Hajdú-Bihar,Hajdúböszörmény,4220
+Hungary,hu,Csongrád-Csanád,Szeged,6720
+Hungary,hu,Csongrád-Csanád,Hódmezővásárhely,6800
+Hungary,hu,Baranya,Pécs,7621
+Hungary,hu,Baranya,Mohács,7700
+Hungary,hu,Győr-Moson-Sopron,Győr,9021
+Hungary,hu,Győr-Moson-Sopron,Sopron,9400
+Hungary,hu,Győr-Moson-Sopron,Mosonmagyaróvár,9200
+Hungary,hu,Veszprém,Veszprém,8200
+Hungary,hu,Veszprém,Ajka,8400
+Hungary,hu,Veszprém,Pápa,8500
+Hungary,hu,Fejér,Székesfehérvár,8000
+Hungary,hu,Fejér,Dunaújváros,2400
+Hungary,hu,Szabolcs-Szatmár-Bereg,Nyíregyháza,4400
+Hungary,hu,Szabolcs-Szatmár-Bereg,Kisvárda,4600
+Hungary,hu,Jász-Nagykun-Szolnok,Szolnok,5000
+Hungary,hu,Jász-Nagykun-Szolnok,Jászberény,5100
+Hungary,hu,Vas,Szombathely,9700
+Hungary,hu,Vas,Körmend,9900
+Hungary,hu,Vas,Sárvár,9600
+Hungary,hu,Zala,Zalaegerszeg,8900
+Hungary,hu,Zala,Nagykanizsa,8800
+Hungary,hu,Somogy,Kaposvár,7400
+Hungary,hu,Somogy,Siófok,8600
+Hungary,hu,Békés,Békéscsaba,5600
+Hungary,hu,Békés,Gyula,5700
+Hungary,hu,Tolna,Szekszárd,7100
+Hungary,hu,Tolna,Paks,7030
+Hungary,hu,Komárom-Esztergom,Tatabánya,2800
+Hungary,hu,Komárom-Esztergom,Esztergom,2500
+Hungary,hu,Nógrád,Salgótarján,3100
+Hungary,hu,Nógrád,Balassagyarmat,2660
+Hungary,hu,Heves,Eger,3300
+Hungary,hu,Heves,Gyöngyös,3200
+Croatia,hr,Zagreb,Zagreb,10000
+Croatia,hr,Zagreb,Velika Gorica,10410
+Croatia,hr,Zagreb,Samobor,10430
+Croatia,hr,Split-Dalmatia,Split,21000
+Croatia,hr,Split-Dalmatia,Makarska,21300
+Croatia,hr,Split-Dalmatia,Sinj,21230
+Croatia,hr,Primorje-Gorski Kotar,Rijeka,51000
+Croatia,hr,Primorje-Gorski Kotar,Opatija,51410
+Croatia,hr,Osijek-Baranja,Osijek,31000
+Croatia,hr,Osijek-Baranja,Đakovo,31400
+Croatia,hr,Istria,Pula,52100
+Croatia,hr,Istria,Rovinj,52210
+Croatia,hr,Istria,Poreč,52440
+Croatia,hr,Dubrovnik-Neretva,Dubrovnik,20000
+Croatia,hr,Dubrovnik-Neretva,Metković,20350
+Croatia,hr,Zadar,Zadar,23000
+Croatia,hr,Zadar,Biograd,23210
+Croatia,hr,Varaždin,Varaždin,42000
+Croatia,hr,Varaždin,Ivanec,42240
+Croatia,hr,Šibenik-Knin,Šibenik,22000
+Croatia,hr,Šibenik-Knin,Knin,22300
+Bulgaria,bg,Sofia City,Sofia,1000
+Bulgaria,bg,Plovdiv,Plovdiv,4000
+Bulgaria,bg,Plovdiv,Asenovgrad,4230
+Bulgaria,bg,Varna,Varna,9000
+Bulgaria,bg,Varna,Devnya,9160
+Bulgaria,bg,Burgas,Burgas,8000
+Bulgaria,bg,Burgas,Nessebar,8230
+Bulgaria,bg,Burgas,Sozopol,8130
+Bulgaria,bg,Ruse,Ruse,7000
+Bulgaria,bg,Stara Zagora,Stara Zagora,6000
+Bulgaria,bg,Stara Zagora,Kazanlak,6100
+Bulgaria,bg,Blagoevgrad,Blagoevgrad,2700
+Bulgaria,bg,Blagoevgrad,Bansko,2770
+Bulgaria,bg,Veliko Tarnovo,Veliko Tarnovo,5000
+Slovakia,sk,Bratislava,Bratislava,811 01
+Slovakia,sk,Bratislava,Pezinok,902 01
+Slovakia,sk,Bratislava,Senec,903 01
+Slovakia,sk,Košice,Košice,040 01
+Slovakia,sk,Košice,Michalovce,071 01
+Slovakia,sk,Prešov,Prešov,080 01
+Slovakia,sk,Prešov,Poprad,058 01
+Slovakia,sk,Prešov,Bardejov,085 01
+Slovakia,sk,Žilina,Žilina,010 01
+Slovakia,sk,Žilina,Martin,036 01
+Slovakia,sk,Žilina,Ružomberok,034 01
+Slovakia,sk,Banská Bystrica,Banská Bystrica,974 01
+Slovakia,sk,Banská Bystrica,Zvolen,960 01
+Slovakia,sk,Nitra,Nitra,949 01
+Slovakia,sk,Nitra,Levice,934 01
+Slovakia,sk,Nitra,Komárno,945 01
+Slovakia,sk,Trnava,Trnava,917 01
+Slovakia,sk,Trnava,Piešťany,921 01
+Slovakia,sk,Trenčín,Trenčín,911 01
+Slovakia,sk,Trenčín,Prievidza,971 01
+Slovenia,si,Osrednjeslovenska,Ljubljana,1000
+Slovenia,si,Osrednjeslovenska,Domžale,1230
+Slovenia,si,Osrednjeslovenska,Kamnik,1240
+Slovenia,si,Podravska,Maribor,2000
+Slovenia,si,Podravska,Ptuj,2250
+Slovenia,si,Savinjska,Celje,3000
+Slovenia,si,Savinjska,Velenje,3320
+Slovenia,si,Gorenjska,Kranj,4000
+Slovenia,si,Gorenjska,Škofja Loka,4220
+Slovenia,si,Gorenjska,Bled,4260
+Slovenia,si,Primorsko-notranjska,Postojna,6230
+Slovenia,si,Obalno-kraška,Koper,6000
+Slovenia,si,Obalno-kraška,Piran,6330
+Slovenia,si,Goriška,Nova Gorica,5000
+Slovenia,si,Goriška,Tolmin,5220
+Slovenia,si,Pomurska,Murska Sobota,9000
+Estonia,ee,Harju,Tallinn,10111
+Estonia,ee,Harju,Maardu,74111
+Estonia,ee,Tartu,Tartu,50050
+Estonia,ee,Ida-Viru,Narva,20303
+Estonia,ee,Ida-Viru,Kohtla-Järve,30322
+Estonia,ee,Pärnu,Pärnu,80010
+Latvia,lv,Riga,Riga,LV-1001
+Latvia,lv,Riga,Jūrmala,LV-2015
+Latvia,lv,Vidzeme,Valmiera,LV-4201
+Latvia,lv,Vidzeme,Cēsis,LV-4101
+Latvia,lv,Kurzeme,Liepāja,LV-3401
+Latvia,lv,Kurzeme,Ventspils,LV-3601
+Latvia,lv,Latgale,Daugavpils,LV-5401
+Latvia,lv,Latgale,Rēzekne,LV-4601
+Lithuania,lt,Vilnius,Vilnius,01100
+Lithuania,lt,Kaunas,Kaunas,44001
+Lithuania,lt,Klaipėda,Klaipėda,91001
+Lithuania,lt,Šiauliai,Šiauliai,76001
+Lithuania,lt,Panevėžys,Panevėžys,35001
+Luxembourg,lu,Luxembourg,Luxembourg City,1111
+Luxembourg,lu,Luxembourg,Esch-sur-Alzette,4001
+Luxembourg,lu,Luxembourg,Differdange,4501
+Luxembourg,lu,Luxembourg,Dudelange,3401
+Luxembourg,lu,Luxembourg,Ettelbruck,9001
+Luxembourg,lu,Luxembourg,Diekirch,9201
+Malta,mt,Malta,Valletta,VLT 1000
+Malta,mt,Malta,Birkirkara,BKR 1000
+Malta,mt,Malta,Sliema,SLM 1000
+Malta,mt,Malta,St. Julian's,STJ 1000
+Malta,mt,Malta,Qormi,QRM 1000
+Malta,mt,Malta,Mosta,MST 1000
+Malta,mt,Gozo,Victoria,VCT 1000
+Malta,mt,Gozo,Nadur,NDR 1000
+Cyprus,cy,Nicosia,Nicosia,1010
+Cyprus,cy,Nicosia,Strovolos,2020
+Cyprus,cy,Limassol,Limassol,3010
+Cyprus,cy,Larnaca,Larnaca,6010
+Cyprus,cy,Paphos,Paphos,8010
+Cyprus,cy,Famagusta,Ayia Napa,5330
+Cyprus,cy,Famagusta,Paralimni,5280

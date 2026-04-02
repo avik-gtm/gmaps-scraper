@@ -17,6 +17,7 @@ from apify_actor import (
 
 # --- Config ---
 ZIP_CSV = Path(__file__).parent / "us_zip_codes.csv"
+EU_CSV = Path(__file__).parent / "eu_postal_codes.csv"
 RESULTS_DIR = Path(__file__).parent / "results"
 RESULTS_DIR.mkdir(exist_ok=True)
 APIFY_LOG_FILE = RESULTS_DIR / "apify_log.json"
@@ -37,7 +38,20 @@ def build_csv_filename(keyword, market, scope, states=None, cities=None, count=0
     parts = ["gmaps", keyword.replace(" ", "-")]
 
     if market == "Europe":
-        parts.append("EU")
+        if scope == "Entire Country" and states is None and cities is None:
+            parts.append("EU-all")
+        elif scope == "Specific Regions" and states:
+            region_str = "-".join(s.replace(" ", "") for s in states[:3])
+            parts.append(region_str)
+            if len(states) > 3:
+                parts.append(f"+{len(states)-3}more")
+        elif scope == "Specific Cities" and cities:
+            city_str = "-".join(c.replace(" ", "") for c in cities[:3])
+            parts.append(city_str)
+            if len(cities) > 3:
+                parts.append(f"+{len(cities)-3}more")
+        else:
+            parts.append("EU")
     else:
         if scope == "Entire US":
             parts.append("US-all")
@@ -144,8 +158,33 @@ def load_zip_codes():
     return df
 
 
+@st.cache_data
+def load_eu_postal_codes():
+    df = pd.read_csv(EU_CSV, dtype={"postal_code": str})
+    return df
+
+
 def get_states(df):
     return sorted(df["state"].unique().tolist())
+
+
+def get_eu_countries(df):
+    return sorted(df["country"].unique().tolist())
+
+
+def get_eu_regions(df, country=None):
+    if country:
+        df = df[df["country"] == country]
+    return sorted(df["region"].unique().tolist())
+
+
+def get_eu_cities(df, country=None, regions=None):
+    if country:
+        df = df[df["country"] == country]
+    if regions:
+        df = df[df["region"].isin(regions)]
+    cities = df["city"].dropna().unique().tolist()
+    return sorted([str(c) for c in cities])
 
 
 def get_cities(df, states=None):
@@ -166,6 +205,24 @@ def filter_zip_codes(df, scope, selected_states=None, selected_cities=None,
 
     if excluded_states:
         filtered = filtered[~filtered["state"].isin(excluded_states)]
+    if excluded_cities:
+        filtered = filtered[~filtered["city"].isin(excluded_cities)]
+
+    return filtered
+
+
+def filter_eu_postal_codes(df, country, scope, selected_regions=None,
+                           selected_cities=None, excluded_regions=None,
+                           excluded_cities=None):
+    filtered = df[df["country"] == country].copy()
+
+    if scope == "Specific Regions" and selected_regions:
+        filtered = filtered[filtered["region"].isin(selected_regions)]
+    elif scope == "Specific Cities" and selected_cities:
+        filtered = filtered[filtered["city"].isin(selected_cities)]
+
+    if excluded_regions:
+        filtered = filtered[~filtered["region"].isin(excluded_regions)]
     if excluded_cities:
         filtered = filtered[~filtered["city"].isin(excluded_cities)]
 
@@ -205,8 +262,9 @@ _scrape_lock = threading.Lock()
 _stop_event = threading.Event()
 
 
-def _fetch_zip(keyword, zip_code, country):
-    query = f"{keyword} in {zip_code}"
+def _fetch_zip(keyword, zip_code, country, city_name=None):
+    location = city_name if city_name else zip_code
+    query = f"{keyword} in {location}"
     return search_maps_all_pages(query=query, country=country)
 
 
@@ -298,7 +356,8 @@ def _run_scrape_background(keyword, zip_rows, country, excluded_categories,
                 futures = {}
                 for row_data in zip_rows[batch_start:batch_end]:
                     zip_code, city, state = row_data
-                    future = executor.submit(_fetch_zip, keyword, zip_code, country)
+                    future = executor.submit(_fetch_zip, keyword, zip_code, country,
+                                               city_name=city)
                     futures[future] = (zip_code, city, state)
 
                 batch_new = []
@@ -736,24 +795,11 @@ elif job and job.get("status") == "error":
 # --- Main search form (only shown when no job is active) ---
 zips_df = load_zip_codes()
 all_states = get_states(zips_df)
+eu_df = load_eu_postal_codes()
+all_eu_countries = get_eu_countries(eu_df)
 
-EUROPEAN_COUNTRIES = [
-    "United Kingdom", "Germany", "France", "Spain", "Italy", "Netherlands",
-    "Belgium", "Switzerland", "Austria", "Sweden", "Norway", "Denmark",
-    "Finland", "Ireland", "Portugal", "Poland", "Czech Republic", "Greece",
-    "Romania", "Hungary", "Croatia", "Bulgaria", "Slovakia", "Slovenia",
-    "Estonia", "Latvia", "Lithuania", "Luxembourg", "Malta", "Cyprus",
-]
-EU_COUNTRY_CODES = {
-    "United Kingdom": "gb", "Germany": "de", "France": "fr", "Spain": "es",
-    "Italy": "it", "Netherlands": "nl", "Belgium": "be", "Switzerland": "ch",
-    "Austria": "at", "Sweden": "se", "Norway": "no", "Denmark": "dk",
-    "Finland": "fi", "Ireland": "ie", "Portugal": "pt", "Poland": "pl",
-    "Czech Republic": "cz", "Greece": "gr", "Romania": "ro", "Hungary": "hu",
-    "Croatia": "hr", "Bulgaria": "bg", "Slovakia": "sk", "Slovenia": "si",
-    "Estonia": "ee", "Latvia": "lv", "Lithuania": "lt", "Luxembourg": "lu",
-    "Malta": "mt", "Cyprus": "cy",
-}
+EU_COUNTRY_CODES = {row["country"]: row["country_code"]
+                    for _, row in eu_df.drop_duplicates("country").iterrows()}
 
 keyword = st.text_input(
     "What are you searching for?",
@@ -769,8 +815,11 @@ selected_states = []
 selected_cities = []
 excluded_states = []
 excluded_cities = []
-selected_eu_countries = []
-eu_city_input = ""
+selected_eu_country = ""
+selected_eu_regions = []
+selected_eu_cities = []
+excluded_eu_regions = []
+excluded_eu_cities = []
 
 if market == "United States":
     with col2:
@@ -788,15 +837,28 @@ if market == "United States":
 
 else:
     with col2:
-        scope = st.radio("Search scope", ["Specific Countries", "Specific Cities"], horizontal=True)
+        selected_eu_country = st.selectbox("Select country", [""] + all_eu_countries,
+                                           format_func=lambda x: "Choose a country..." if x == "" else x)
 
-    if scope == "Specific Countries":
-        selected_eu_countries = st.multiselect("Select countries", EUROPEAN_COUNTRIES)
+    if selected_eu_country:
+        eu_regions = get_eu_regions(eu_df, selected_eu_country)
+        scope = st.radio("Search scope",
+                         ["Entire Country", "Specific Regions", "Specific Cities"],
+                         horizontal=True)
+
+        if scope == "Specific Regions":
+            selected_eu_regions = st.multiselect("Select regions/states", eu_regions)
+        elif scope == "Specific Cities":
+            city_list = get_eu_cities(eu_df, selected_eu_country)
+            selected_eu_cities = st.multiselect("Select cities", city_list, help="Type to search")
+
+        if scope != "Specific Cities":
+            excluded_eu_cities = st.multiselect("Exclude cities (optional)",
+                                                get_eu_cities(eu_df, selected_eu_country))
+        if scope != "Specific Regions":
+            excluded_eu_regions = st.multiselect("Exclude regions (optional)", eu_regions)
     else:
-        eu_city_input = st.text_input(
-            "Cities to search (comma-separated)",
-            placeholder="e.g., London, Berlin, Paris",
-        )
+        scope = ""
 
 st.divider()
 
@@ -856,19 +918,27 @@ if submitted and keyword:
             zip_rows.append((zip_code, city, state))
 
     else:
-        cities_to_search = []
-        if scope == "Specific Cities" and eu_city_input:
-            cities_to_search = [c.strip() for c in eu_city_input.split(",") if c.strip()]
-        elif scope == "Specific Countries" and selected_eu_countries:
-            cities_to_search = list(selected_eu_countries)
-
-        if not cities_to_search:
-            st.error("Please select countries or enter cities to search.")
+        if not selected_eu_country:
+            st.error("Please select a country.")
             st.stop()
 
-        for loc in cities_to_search:
-            cc = EU_COUNTRY_CODES.get(loc, "")
-            zip_rows.append((loc, loc, cc))
+        filtered_eu = filter_eu_postal_codes(
+            eu_df, selected_eu_country, scope,
+            selected_regions=selected_eu_regions,
+            selected_cities=selected_eu_cities,
+            excluded_regions=excluded_eu_regions,
+            excluded_cities=excluded_eu_cities,
+        )
+
+        if filtered_eu.empty:
+            st.error("No locations match your filters. Adjust your selection.")
+            st.stop()
+
+        for _, row in filtered_eu.iterrows():
+            postal = row["postal_code"]
+            city = row["city"]
+            region = row["region"]
+            zip_rows.append((postal, city, region))
 
     pre_seen = set()
     if auto_exclude:
@@ -876,8 +946,7 @@ if submitted and keyword:
             place_ids, scraped_zips = load_past_scraped_data(keyword=kw)
             pre_seen.update(place_ids)
             before = len(zip_rows)
-            if market == "United States":
-                zip_rows = [(z, c, s) for z, c, s in zip_rows if z not in scraped_zips]
+            zip_rows = [(z, c, s) for z, c, s in zip_rows if z not in scraped_zips]
             skipped = before - len(zip_rows)
             if skipped or pre_seen:
                 st.info(f"Auto-excluding **{len(pre_seen):,}** businesses, "
@@ -887,10 +956,17 @@ if submitted and keyword:
         st.success("All zip codes already scraped. Nothing to do.")
         st.stop()
 
+    if market == "United States":
+        fn_states = selected_states or None
+        fn_cities = selected_cities or None
+    else:
+        fn_states = selected_eu_regions or None
+        fn_cities = selected_eu_cities or None
+
     filename = build_csv_filename(
         keyword, market, scope,
-        states=selected_states or None,
-        cities=selected_cities or (eu_city_input.split(",") if eu_city_input else None),
+        states=fn_states,
+        cities=fn_cities,
         count=0,
     )
     filepath = RESULTS_DIR / filename
@@ -898,13 +974,13 @@ if submitted and keyword:
     if market == "United States":
         api_country = "us"
     else:
-        api_country = EU_COUNTRY_CODES.get(zip_rows[0][2], "gb") if zip_rows else "gb"
+        api_country = EU_COUNTRY_CODES.get(selected_eu_country, "gb")
 
     kw = keywords[0]
     start_scrape_job(
         keyword=kw,
         zip_rows=zip_rows,
-        country=api_country if market == "United States" else "",
+        country=api_country,
         excluded_categories=excluded_cats,
         initial_seen_ids=pre_seen,
         output_filepath=filepath,
