@@ -1,5 +1,7 @@
 import os
+import re
 import time
+import unicodedata
 import httpx
 from datetime import datetime
 
@@ -14,6 +16,12 @@ except Exception:
     APIFY_KV_STORE_ID = os.getenv("APIFY_KV_STORE_ID", "")
 
 
+def _sanitize_kv_key(name: str) -> str:
+    """Transliterate non-ASCII chars (ü→u, é→e …) and strip anything still invalid."""
+    name = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
+    return re.sub(r"[^A-Za-z0-9._\-+]", "_", name)
+
+
 def upload_to_kv_store(file_key: str, csv_data: str, api_key: str = None,
                        store_id: str = None) -> dict:
     """Upload a CSV to the Apify key-value store."""
@@ -22,6 +30,7 @@ def upload_to_kv_store(file_key: str, csv_data: str, api_key: str = None,
     if not key or not sid:
         return {"error": "No Apify API key or KV store ID configured."}
 
+    file_key = _sanitize_kv_key(file_key)
     try:
         url = f"https://api.apify.com/v2/key-value-stores/{sid}/records/{file_key}"
         headers = {"Authorization": f"Bearer {key}", "Content-Type": "text/csv"}

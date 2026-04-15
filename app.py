@@ -387,6 +387,7 @@ def _run_scrape_background(keyword, zip_rows, country, excluded_categories,
                     })
 
                 save_batch_to_disk(batch_new)
+                upload_result_to_cloud(output_filepath)
 
                 if delay > 0:
                     time.sleep(delay)
