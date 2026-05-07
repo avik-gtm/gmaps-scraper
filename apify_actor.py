@@ -23,23 +23,31 @@ def _sanitize_kv_key(name: str) -> str:
 
 
 def upload_to_kv_store(file_key: str, csv_data: str, api_key: str = None,
-                       store_id: str = None) -> dict:
-    """Upload a CSV to the Apify key-value store."""
+                       store_id: str = None, max_retries: int = 3) -> dict:
+    """Upload a CSV to the Apify key-value store with retries."""
     key = api_key or APIFY_API_KEY
     sid = store_id or APIFY_KV_STORE_ID
     if not key or not sid:
         return {"error": "No Apify API key or KV store ID configured."}
 
     file_key = _sanitize_kv_key(file_key)
-    try:
-        url = f"https://api.apify.com/v2/key-value-stores/{sid}/records/{file_key}"
-        headers = {"Authorization": f"Bearer {key}", "Content-Type": "text/csv"}
-        with httpx.Client(timeout=60) as client:
-            resp = client.put(url, content=csv_data, headers=headers)
-            resp.raise_for_status()
-        return {"success": True, "file_key": file_key}
-    except Exception as e:
-        return {"error": str(e)}
+    url = f"https://api.apify.com/v2/key-value-stores/{sid}/records/{file_key}"
+    headers = {"Authorization": f"Bearer {key}", "Content-Type": "text/csv"}
+
+    last_err = None
+    # Scale timeout with payload size: ~1MB/sec floor, 120s minimum.
+    timeout = max(120, len(csv_data) // (1024 * 1024) * 30)
+    for attempt in range(max_retries):
+        try:
+            with httpx.Client(timeout=timeout) as client:
+                resp = client.put(url, content=csv_data, headers=headers)
+                resp.raise_for_status()
+            return {"success": True, "file_key": file_key, "attempts": attempt + 1}
+        except Exception as e:
+            last_err = e
+            if attempt < max_retries - 1:
+                time.sleep(2 ** attempt)
+    return {"error": str(last_err), "file_key": file_key, "attempts": max_retries}
 
 
 def download_from_kv_store(file_key: str, api_key: str = None,
@@ -62,28 +70,37 @@ def download_from_kv_store(file_key: str, api_key: str = None,
 
 
 def list_kv_store_keys(api_key: str = None, store_id: str = None,
-                       prefix: str = "gmaps") -> list[str]:
-    """List all keys in the Apify key-value store matching a prefix."""
+                       prefix: str = "") -> list[str]:
+    """List all CSV keys in the Apify key-value store, optionally filtered by prefix."""
     key = api_key or APIFY_API_KEY
     sid = store_id or APIFY_KV_STORE_ID
     if not key or not sid:
         return []
 
     keys = []
-    try:
-        url = f"https://api.apify.com/v2/key-value-stores/{sid}/keys"
-        headers = {"Authorization": f"Bearer {key}"}
-        params = {"limit": 1000}
-        with httpx.Client(timeout=30) as client:
+    exclusive_start_key = None
+    url = f"https://api.apify.com/v2/key-value-stores/{sid}/keys"
+    headers = {"Authorization": f"Bearer {key}"}
+    with httpx.Client(timeout=60) as client:
+        while True:
+            params = {"limit": 1000}
+            if exclusive_start_key:
+                params["exclusiveStartKey"] = exclusive_start_key
             resp = client.get(url, headers=headers, params=params)
             resp.raise_for_status()
-            data = resp.json()
-            for item in data.get("data", {}).get("items", []):
+            data = resp.json().get("data", {})
+            for item in data.get("items", []):
                 k = item.get("key", "")
-                if k.startswith(prefix) and k.endswith(".csv"):
-                    keys.append(k)
-    except Exception:
-        pass
+                if not k.endswith(".csv"):
+                    continue
+                if prefix and not k.startswith(prefix):
+                    continue
+                keys.append(k)
+            if not data.get("isTruncated"):
+                break
+            exclusive_start_key = data.get("nextExclusiveStartKey")
+            if not exclusive_start_key:
+                break
     return keys
 
 

@@ -105,28 +105,55 @@ def is_job_stale(job: dict, max_age_minutes: int = 5) -> bool:
 
 
 def sync_results_from_cloud():
-    """Download any CSVs from Apify KV store that aren't on local disk."""
-    remote_keys = list_kv_store_keys(prefix="gmaps")
+    """Download any CSVs from Apify KV store that aren't on local disk.
+
+    Returns (downloaded, errors) where errors is a list of (key, message).
+    Raises only if listing the store itself fails — per-key failures are
+    collected so a single bad record doesn't abort the whole sync.
+    """
+    remote_keys = list_kv_store_keys()
     local_files = {f.name for f in RESULTS_DIR.glob("*.csv")}
     downloaded = 0
+    errors = []
 
     for key in remote_keys:
-        if key not in local_files:
+        if key in local_files:
+            continue
+        try:
             csv_data = download_from_kv_store(key)
             if csv_data:
                 (RESULTS_DIR / key).write_text(csv_data)
                 downloaded += 1
+            else:
+                errors.append((key, "empty response"))
+        except Exception as e:
+            errors.append((key, str(e)))
 
-    return downloaded
+    return downloaded, errors
 
 
 def upload_result_to_cloud(filepath):
-    """Upload a CSV result to Apify KV store for persistence."""
+    """Upload a CSV result to Apify KV store. Returns (ok, message)."""
     try:
         csv_data = filepath.read_text()
-        upload_to_kv_store(filepath.name, csv_data)
-    except Exception:
-        pass
+    except Exception as e:
+        return False, f"local read failed: {e}"
+    result = upload_to_kv_store(filepath.name, csv_data)
+    if "error" in result:
+        return False, result["error"]
+    return True, "ok"
+
+
+def cloud_connectivity_check() -> tuple[bool, str]:
+    """Roundtrip a tiny test record to confirm uploads will work."""
+    try:
+        result = upload_to_kv_store("__connectivity_check__.csv",
+                                    "ok\n", max_retries=1)
+        if "error" in result:
+            return False, result["error"]
+        return True, "ok"
+    except Exception as e:
+        return False, str(e)
 
 
 # --- Password Protection ---
@@ -285,6 +312,11 @@ def _run_scrape_background(keyword, zip_rows, country, excluded_categories,
         errors = 0
         found = 0
         header_written = False
+        upload_ok_count = 0
+        upload_fail_count = 0
+        last_upload_error = ""
+        consecutive_upload_failures = 0
+        MAX_CONSECUTIVE_UPLOAD_FAILURES = 5
 
         save_job_status({
             "status": "running",
@@ -292,6 +324,9 @@ def _run_scrape_background(keyword, zip_rows, country, excluded_categories,
             "total": total,
             "found": 0,
             "errors": 0,
+            "uploads_ok": 0,
+            "uploads_failed": 0,
+            "last_upload_error": "",
             "output_file": str(output_filepath),
             "started_at": datetime.now().isoformat(),
         })
@@ -336,17 +371,25 @@ def _run_scrape_background(keyword, zip_rows, country, excluded_categories,
 
             while batch_start < total:
                 if _stop_event.is_set():
+                    if output_filepath.exists():
+                        ok, msg = upload_result_to_cloud(output_filepath)
+                        if ok:
+                            upload_ok_count += 1
+                        else:
+                            upload_fail_count += 1
+                            last_upload_error = msg
                     save_job_status({
                         "status": "stopped",
                         "completed": completed,
                         "total": total,
                         "found": found,
                         "errors": errors,
+                        "uploads_ok": upload_ok_count,
+                        "uploads_failed": upload_fail_count,
+                        "last_upload_error": last_upload_error,
                         "output_file": str(output_filepath),
                         "message": "Stopped by user.",
                     })
-                    # Upload partial results to cloud
-                    upload_result_to_cloud(output_filepath)
                     return
 
                 if max_results > 0 and found >= max_results:
@@ -383,19 +426,53 @@ def _run_scrape_background(keyword, zip_rows, country, excluded_categories,
                         "total": total,
                         "found": found,
                         "errors": errors,
+                        "uploads_ok": upload_ok_count,
+                        "uploads_failed": upload_fail_count,
+                        "last_upload_error": last_upload_error,
                         "output_file": str(output_filepath),
                     })
 
                 save_batch_to_disk(batch_new)
-                upload_result_to_cloud(output_filepath)
+                if output_filepath.exists():
+                    ok, msg = upload_result_to_cloud(output_filepath)
+                    if ok:
+                        upload_ok_count += 1
+                        consecutive_upload_failures = 0
+                    else:
+                        upload_fail_count += 1
+                        last_upload_error = msg
+                        consecutive_upload_failures += 1
+                        if consecutive_upload_failures >= MAX_CONSECUTIVE_UPLOAD_FAILURES:
+                            save_job_status({
+                                "status": "error",
+                                "completed": completed,
+                                "total": total,
+                                "found": found,
+                                "errors": errors,
+                                "uploads_ok": upload_ok_count,
+                                "uploads_failed": upload_fail_count,
+                                "last_upload_error": last_upload_error,
+                                "output_file": str(output_filepath),
+                                "message": (
+                                    f"Cloud upload failed {consecutive_upload_failures}× in a row "
+                                    f"({last_upload_error}). Aborting to avoid losing data on app sleep."
+                                ),
+                            })
+                            return
 
                 if delay > 0:
                     time.sleep(delay)
 
                 batch_start = batch_end
 
-        # Upload completed results to cloud
-        upload_result_to_cloud(output_filepath)
+        # Upload completed results to cloud (final flush)
+        if output_filepath.exists():
+            ok, msg = upload_result_to_cloud(output_filepath)
+            if ok:
+                upload_ok_count += 1
+            else:
+                upload_fail_count += 1
+                last_upload_error = msg
 
         save_job_status({
             "status": "completed",
@@ -403,6 +480,9 @@ def _run_scrape_background(keyword, zip_rows, country, excluded_categories,
             "total": total,
             "found": found,
             "errors": errors,
+            "uploads_ok": upload_ok_count,
+            "uploads_failed": upload_fail_count,
+            "last_upload_error": last_upload_error,
             "output_file": str(output_filepath),
             "finished_at": datetime.now().isoformat(),
         })
@@ -410,9 +490,12 @@ def _run_scrape_background(keyword, zip_rows, country, excluded_categories,
         save_job_status({
             "status": "error",
             "message": str(e),
+            "uploads_ok": upload_ok_count,
+            "uploads_failed": upload_fail_count,
+            "last_upload_error": last_upload_error,
             "output_file": str(output_filepath),
         })
-        # Try to upload whatever we have
+        # Try to upload whatever we have (best effort)
         if output_filepath.exists():
             upload_result_to_cloud(output_filepath)
     finally:
@@ -457,16 +540,37 @@ st.title("🗺️ Google Maps Scraper")
 st.caption("Search for businesses across the United States or Europe")
 
 # --- On startup: restore past results from cloud ---
-if "_cloud_synced" not in st.session_state:
-    with st.spinner("Loading past results..."):
-        downloaded = sync_results_from_cloud()
-    if downloaded:
-        st.toast(f"Restored {downloaded} past scrape(s)")
-    st.session_state["_cloud_synced"] = True
+def _do_cloud_sync(label="Loading past results..."):
+    try:
+        with st.spinner(label):
+            downloaded, errors = sync_results_from_cloud()
+        if downloaded:
+            st.toast(f"Restored {downloaded} past scrape(s)")
+        if errors:
+            st.warning(f"{len(errors)} cloud file(s) couldn't be downloaded — "
+                       "click 'Refresh from cloud' in the sidebar to retry.")
+            with st.expander("Sync errors"):
+                for k, msg in errors:
+                    st.text(f"• {k}: {msg}")
+        return True
+    except Exception as e:
+        st.error(f"Couldn't reach Apify cloud to restore past scrapes: {e}")
+        st.caption("Click 'Refresh from cloud' in the sidebar to retry.")
+        return False
+
+
+if not st.session_state.get("_cloud_synced"):
+    if _do_cloud_sync():
+        st.session_state["_cloud_synced"] = True
 
 # --- Sidebar: View Past Results (always rendered) ---
 with st.sidebar:
     st.header("Past Scrapes")
+    if st.button("Refresh from cloud", use_container_width=True, key="sidebar_refresh"):
+        st.session_state.pop("_cloud_synced", None)
+        _do_cloud_sync(label="Refreshing from cloud...")
+        st.session_state["_cloud_synced"] = True
+        st.rerun()
     result_files = sorted(RESULTS_DIR.glob("*.csv"), reverse=True)
     if result_files:
         selected_file = st.selectbox(
@@ -628,6 +732,18 @@ elif job and job.get("status") == "running":
     progress = job["completed"] / job["total"] if job["total"] > 0 else 0
     st.progress(min(progress, 1.0))
 
+    uploads_ok = job.get("uploads_ok", 0)
+    uploads_failed = job.get("uploads_failed", 0)
+    last_upload_error = job.get("last_upload_error", "")
+    if uploads_failed:
+        st.warning(
+            f"⚠️ Cloud upload failures: {uploads_failed} (successful: {uploads_ok}). "
+            f"Last error: `{last_upload_error}`. If this keeps happening, the run "
+            f"will abort to prevent data loss when the app sleeps."
+        )
+    elif uploads_ok:
+        st.caption(f"☁️ Cloud uploads: {uploads_ok} successful — your progress is safe.")
+
     if st.button("Stop Scraping", use_container_width=True, type="secondary"):
         stop_scrape_job()
         st.warning("Stop signal sent. Waiting for current batch to finish...")
@@ -640,6 +756,23 @@ elif job and job.get("status") in ("completed", "stopped"):
     status_label = "Scrape completed" if job["status"] == "completed" else "Scrape stopped"
     st.success(f"**{status_label}** — Found **{job.get('found', 0):,}** businesses "
                f"({job.get('completed', 0)}/{job.get('total', 0)} zips, {job.get('errors', 0)} errors)")
+
+    uploads_ok = job.get("uploads_ok", 0)
+    uploads_failed = job.get("uploads_failed", 0)
+    if uploads_failed and uploads_ok == 0:
+        st.error(
+            f"⚠️ Every cloud upload failed ({uploads_failed} attempts). "
+            f"Last error: `{job.get('last_upload_error', '')}`. "
+            f"Download the CSV below NOW — it will be lost when the app sleeps."
+        )
+    elif uploads_failed:
+        st.warning(
+            f"Some cloud uploads failed ({uploads_failed} of {uploads_ok + uploads_failed}). "
+            f"Last error: `{job.get('last_upload_error', '')}`. "
+            f"At least one snapshot reached the cloud, but downloading now is safer."
+        )
+    elif uploads_ok:
+        st.caption(f"☁️ {uploads_ok} cloud uploads succeeded — results are safe in Apify.")
 
     if output_file.exists():
         df_results = pd.read_csv(output_file)
@@ -956,6 +1089,21 @@ if submitted and keyword:
     if not zip_rows:
         st.success("All zip codes already scraped. Nothing to do.")
         st.stop()
+
+    with st.spinner("Checking cloud connectivity (so your scrape won't be lost)..."):
+        ok, msg = cloud_connectivity_check()
+    if not ok:
+        st.error(
+            f"❌ Cloud upload pre-flight failed: `{msg}`.\n\n"
+            f"If you start the scrape now, results may be lost when the Streamlit "
+            f"Cloud app sleeps. Fix the Apify credentials/network first, or "
+            f"acknowledge the risk by checking the box below."
+        )
+        proceed_anyway = st.checkbox(
+            "I understand — start anyway (results only safe while this tab stays open)"
+        )
+        if not proceed_anyway:
+            st.stop()
 
     if market == "United States":
         fn_states = selected_states or None
